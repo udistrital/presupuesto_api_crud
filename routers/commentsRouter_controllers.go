@@ -7,7 +7,7 @@ import (
 
 func init() {
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -16,7 +16,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -25,7 +25,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -34,7 +34,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -43,7 +43,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
@@ -52,7 +52,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "AprobarPresupuesto",
             Router: `/AprobacionAsignacionInicial/`,
@@ -61,7 +61,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "UpdateApropiacionValue",
             Router: `/UpdateApropiacionValue/:id/:valor`,
@@ -70,7 +70,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ApropiacionController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ApropiacionController"],
         beego.ControllerComments{
             Method: "VigenciaApropiaciones",
             Router: `/VigenciaApropiaciones`,
@@ -79,7 +79,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -88,7 +88,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -97,7 +97,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -106,7 +106,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -115,7 +115,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
@@ -124,7 +124,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "AprobarAnulacionDisponibilidad",
             Router: `/AprobarAnulacion`,
@@ -133,7 +133,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "DeleteDisponibilidadData",
             Router: `/DeleteDisponibilidadData/:id`,
@@ -142,7 +142,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "DeleteDisponibilidadMovimiento",
             Router: `/DeleteDisponibilidadMovimiento/:id`,
@@ -151,7 +151,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "GetPrincDisponibilidadInfo",
             Router: `/GetPrincDisponibilidadInfo/:id`,
@@ -160,7 +160,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:DisponibilidadController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "TotalDisponibilidades",
             Router: `/TotalDisponibilidades/:vigencia`,
@@ -169,7 +169,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -178,7 +178,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -187,7 +187,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -196,7 +196,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -205,7 +205,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
@@ -214,7 +214,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "DeleteModificacionFuenteFinanciamientoTr",
             Router: `/DeleteModificacionFuenteFinanciamientoTr`,
@@ -223,7 +223,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "DeleteMovimientoFuenteFinanciamientoTr",
             Router: `/DeleteMovimientoFuenteFinanciamientoTr/:id`,
@@ -232,7 +232,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "MovimientoFuenteFinanciamientoTr",
             Router: `/MovimientoFuenteFinanciamientoTr`,
@@ -241,7 +241,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:FuenteFinanciamientoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:FuenteFinanciamientoController"],
         beego.ControllerComments{
             Method: "RegistrarFuenteFinanciamientoTr",
             Router: `/RegistrarFuenteFinanciamientoTr`,
@@ -250,7 +250,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -259,7 +259,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -268,7 +268,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -277,7 +277,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -286,7 +286,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
@@ -295,7 +295,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:ProductoController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:ProductoController"],
         beego.ControllerComments{
             Method: "TotalProductos",
             Router: `/TotalProductos/`,
@@ -304,7 +304,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -313,7 +313,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -322,7 +322,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -331,7 +331,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -340,7 +340,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
@@ -349,7 +349,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "AprobarAnulacionRp",
             Router: `/AprobarAnulacion`,
@@ -358,7 +358,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "DeleteRpData",
             Router: `/DeleteRpData/:id`,
@@ -367,7 +367,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "TotalRp",
             Router: `/TotalRp/:vigencia`,
@@ -376,7 +376,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "Anular",
             Router: `Anular/`,
@@ -385,7 +385,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "SaldoRp",
             Router: `SaldoRp/`,
@@ -394,7 +394,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RegistroPresupuestalController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RegistroPresupuestalController"],
         beego.ControllerComments{
             Method: "ValorActualRp",
             Router: `ValorActualRp/:id`,
@@ -403,7 +403,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"],
         beego.ControllerComments{
             Method: "Post",
             Router: `/`,
@@ -412,7 +412,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"],
         beego.ControllerComments{
             Method: "GetAll",
             Router: `/`,
@@ -421,7 +421,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"],
         beego.ControllerComments{
             Method: "GetOne",
             Router: `/:id`,
@@ -430,7 +430,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"],
         beego.ControllerComments{
             Method: "Put",
             Router: `/:id`,
@@ -439,7 +439,7 @@ func init() {
             Filters: nil,
             Params: nil})
 
-    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_api_crud/controllers:RubroController"],
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:RubroController"],
         beego.ControllerComments{
             Method: "Delete",
             Router: `/:id`,
