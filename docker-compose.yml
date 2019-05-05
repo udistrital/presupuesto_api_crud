@@ -1,0 +1,48 @@
+version: '3.4'
+
+services: 
+  api:
+    build: ./bee_build
+    image: ${SERVICE_NAME}
+    container_name: ${SERVICE_NAME}
+    volumes:
+      - gosrc:/go
+      - .:/go/src/${API_BASE_DIR}/${API_NAME}
+    ports: 
+      - "${PORT}:${PORT}"
+    environment:
+      - CTAS_PRES_API_HTTP_PORT=${PORT}
+      - API_NAME=${API_NAME}
+      - CTAS_PRES_API_DB_USER=${POSTGRES_USER}
+      - CTAS_PRES_API_DB_PASS=${POSTGRES_PASSWORD}
+      - CTAS_PRES_API_DB_URL=${POSTGRES_HOST}
+      - CTAS_PRES_API_DB_NAME=${POSTGRES_DB}
+      - RUN_MODE=dev 
+      - PgSchema=public
+      - SERVICE_TAGS=traefik.enable=true,traefik.frontend.entryPoints=http,traefik.frontend.rule=Host:${SERVICE_NAME}.localhost   
+    command: sh -c 'cd ${API_BASE_DIR}/${API_NAME};go get -v ./...; bee run'
+    depends_on: 
+      - db
+    networks: 
+      - back_end
+  db:
+    container_name: ${POSTGRES_HOST}
+    image: postgres:10-alpine
+    ports:
+      - "${DB_PORT}:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks: 
+      - back_end
+
+volumes:
+  gosrc:
+  postgres_data:
+networks: 
+  back_end:
+    external: true
