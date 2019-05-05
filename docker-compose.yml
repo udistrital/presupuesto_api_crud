@@ -11,12 +11,12 @@ services:
     ports: 
       - "${PORT}:${PORT}"
     environment:
-      - CTAS_PRES_API_HTTP_PORT=${PORT}
+      - PRESUPUESTO_API_HTTP_PORT=${PORT}
       - API_NAME=${API_NAME}
-      - CTAS_PRES_API_DB_USER=${POSTGRES_USER}
-      - CTAS_PRES_API_DB_PASS=${POSTGRES_PASSWORD}
-      - CTAS_PRES_API_DB_URL=${POSTGRES_HOST}
-      - CTAS_PRES_API_DB_NAME=${POSTGRES_DB}
+      - PRESUPUESTO_API_DB_USER=${POSTGRES_USER}
+      - PRESUPUESTO_API_DB_PASS=${POSTGRES_PASSWORD}
+      - PRESUPUESTO_API_DB_URL=${POSTGRES_HOST}
+      - PRESUPUESTO_API_DB_NAME=${POSTGRES_DB}
       - RUN_MODE=dev 
       - PgSchema=public
       - SERVICE_TAGS=traefik.enable=true,traefik.frontend.entryPoints=http,traefik.frontend.rule=Host:${SERVICE_NAME}.localhost   
