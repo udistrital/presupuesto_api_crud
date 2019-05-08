@@ -79,6 +79,11 @@ func init() {
 				&controllers.FormaIngresoController{},
 			),
 		),
+		beego.NSNamespace("/fuente_financiamiento",
+			beego.NSInclude(
+				&controllers.FuenteFinanciamientoController{},
+			),
+		),
 		beego.NSNamespace("/ingreso",
 			beego.NSInclude(
 				&controllers.IngresoController{},
