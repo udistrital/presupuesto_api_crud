@@ -64,6 +64,11 @@ func init() {
 				&controllers.EstadoIngresoController{},
 			),
 		),
+		beego.NSNamespace("/estado_ingreso_sin_situacion_fondos",
+			beego.NSInclude(
+				&controllers.EstadoIngresoSinSituacionFondosController{},
+			),
+		),
 		beego.NSNamespace("/forma_ingreso",
 			beego.NSInclude(
 				&controllers.FormaIngresoController{},
@@ -79,9 +84,24 @@ func init() {
 				&controllers.IngresoController{},
 			),
 		),
+		beego.NSNamespace("/ingreso_sin_situacion_fondos",
+			beego.NSInclude(
+				&controllers.IngresoSinSituacionFondosController{},
+			),
+		),
+		beego.NSNamespace("/ingreso_sin_situacion_fondos_estado",
+			beego.NSInclude(
+				&controllers.IngresoSinSituacionFondosEstadoController{},
+			),
+		),
 		beego.NSNamespace("/movimiento_contable",
 			beego.NSInclude(
 				&controllers.MovimientoContableController{},
+			),
+		),
+		beego.NSNamespace("/orden_pago",
+			beego.NSInclude(
+				&controllers.OrdenPagoController{},
 			),
 		),
 		beego.NSNamespace("/tipo_cuenta_bancaria",
