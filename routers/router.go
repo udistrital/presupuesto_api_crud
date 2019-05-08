@@ -19,9 +19,79 @@ func init() {
 				&controllers.RubroController{},
 			),
 		),
+		beego.NSNamespace("/afectacion_concepto",
+			beego.NSInclude(
+				&controllers.AfectacionConceptoController{},
+			),
+		),
 		beego.NSNamespace("/apropiacion",
 			beego.NSInclude(
 				&controllers.ApropiacionController{},
+			),
+		),
+		beego.NSNamespace("/arbol_conceptos",
+			beego.NSInclude(
+				&controllers.ArbolConceptosController{},
+			),
+		),
+		beego.NSNamespace("/concepto",
+			beego.NSInclude(
+				&controllers.ConceptoController{},
+			),
+		),
+		beego.NSNamespace("/concepto_cuenta_contable",
+			beego.NSInclude(
+				&controllers.ConceptoCuentaContableController{},
+			),
+		),
+		beego.NSNamespace("/concepto_detalle_tipo_transaccion",
+			beego.NSInclude(
+				&controllers.ConceptoDetalleTipoTransaccionController{},
+			),
+		),
+		beego.NSNamespace("/cuenta_bancaria",
+			beego.NSInclude(
+				&controllers.CuentaBancariaController{},
+			),
+		),
+		beego.NSNamespace("/cuenta_especial",
+			beego.NSInclude(
+				&controllers.CuentaEspecialController{},
+			),
+		),
+		beego.NSNamespace("/estado_ingreso",
+			beego.NSInclude(
+				&controllers.EstadoIngresoController{},
+			),
+		),
+		beego.NSNamespace("/forma_ingreso",
+			beego.NSInclude(
+				&controllers.FormaIngresoController{},
+			),
+		),
+		beego.NSNamespace("/forma_pago",
+			beego.NSInclude(
+				&controllers.FormaIngresoController{},
+			),
+		),
+		beego.NSNamespace("/ingreso",
+			beego.NSInclude(
+				&controllers.IngresoController{},
+			),
+		),
+		beego.NSNamespace("/movimiento_contable",
+			beego.NSInclude(
+				&controllers.MovimientoContableController{},
+			),
+		),
+		beego.NSNamespace("/tipo_cuenta_bancaria",
+			beego.NSInclude(
+				&controllers.TipoCuentaBancariaController{},
+			),
+		),
+		beego.NSNamespace("/unidad_ejecutora",
+			beego.NSInclude(
+				&controllers.UnidadEjecutoraController{},
 			),
 		),
 	)
