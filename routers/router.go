@@ -39,6 +39,11 @@ func init() {
 				&controllers.ArbolConceptosController{},
 			),
 		),
+		beego.NSNamespace("/compromiso",
+			beego.NSInclude(
+				&controllers.CompromisoController{},
+			),
+		),
 		beego.NSNamespace("/concepto",
 			beego.NSInclude(
 				&controllers.ConceptoController{},
@@ -137,6 +142,11 @@ func init() {
 		beego.NSNamespace("/producto_rubro",
 			beego.NSInclude(
 				&controllers.ProductoRubroController{},
+			),
+		),
+		beego.NSNamespace("/registro_presupuestal",
+			beego.NSInclude(
+				&controllers.RegistroPresupuestalController{},
 			),
 		),
 		beego.NSNamespace("/tipo_cuenta_bancaria",
