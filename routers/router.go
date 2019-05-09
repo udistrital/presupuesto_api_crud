@@ -59,6 +59,16 @@ func init() {
 				&controllers.CuentaEspecialController{},
 			),
 		),
+		beego.NSNamespace("/disponibilidad",
+			beego.NSInclude(
+				&controllers.DisponibilidadController{},
+			),
+		),
+		beego.NSNamespace("/disponibilidad_apropiacion",
+			beego.NSInclude(
+				&controllers.DisponibilidadApropiacionController{},
+			),
+		),
 		beego.NSNamespace("/estado_ingreso",
 			beego.NSInclude(
 				&controllers.EstadoIngresoController{},
@@ -99,6 +109,11 @@ func init() {
 				&controllers.IngresoSinSituacionFondosEstadoController{},
 			),
 		),
+		beego.NSNamespace("/movimiento_apropiacion",
+			beego.NSInclude(
+				&controllers.MovimientoApropiacionController{},
+			),
+		),
 		beego.NSNamespace("/movimiento_contable",
 			beego.NSInclude(
 				&controllers.MovimientoContableController{},
@@ -109,9 +124,24 @@ func init() {
 				&controllers.OrdenPagoController{},
 			),
 		),
+		beego.NSNamespace("/producto",
+			beego.NSInclude(
+				&controllers.ProductoController{},
+			),
+		),
+		beego.NSNamespace("/producto_rubro",
+			beego.NSInclude(
+				&controllers.ProductoRubroController{},
+			),
+		),
 		beego.NSNamespace("/tipo_cuenta_bancaria",
 			beego.NSInclude(
 				&controllers.TipoCuentaBancariaController{},
+			),
+		),
+		beego.NSNamespace("/tipo_anulacion_presupuestal",
+			beego.NSInclude(
+				&controllers.TipoAnulacionPresupuestalController{},
 			),
 		),
 		beego.NSNamespace("/unidad_ejecutora",

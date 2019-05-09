@@ -45,12 +45,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 	qb, _ := orm.NewQueryBuilder("mysql")
 	if finicio != "" && ffin != "" {
 		qb.Select("COUNT(DISTINCT(disponibilidad))").
-			From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+			From("financiera.disponibilidad").
+			InnerJoin("financiera.disponibilidad_apropiacion").
 			On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+			InnerJoin("financiera.apropiacion").
 			On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+			InnerJoin("financiera.rubro").
 			On("rubro.id = apropiacion.rubro").
 			Where("disponibilidad.vigencia = ?").
 			And("fecha_registro >= ?").
@@ -60,12 +60,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 		return
 	}
 	qb.Select("COUNT(DISTINCT(disponibilidad))").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("financiera.disponibilidad").
+		InnerJoin("financiera.disponibilidad_apropiacion").
 		On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		InnerJoin("financiera.apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("financiera.rubro").
 		On("rubro.id = apropiacion.rubro").
 		Where("disponibilidad.vigencia = ?").
 		And("unidad_ejecutora = ?")
@@ -84,12 +84,12 @@ func AddDisponibilidad(m map[string]interface{}) (v Disponibilidad, err error) {
 	var procesoExterno DisponibilidadProcesoExterno
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("COALESCE(MAX(numero_disponibilidad), 0)+1 as consecutivo").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("financiera.disponibilidad").
+		InnerJoin("financiera.disponibilidad_apropiacion").
 		On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		InnerJoin("financiera.apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("financiera.rubro").
 		On("apropiacion.rubro = rubro.id").
 		Where("disponibilidad.vigencia = ?").
 		And("rubro.unidad_ejecutora = ?")
@@ -282,17 +282,17 @@ func AnulacionTotal(m *Info_disponibilidad_a_anular) (alerta []string, err error
 	m.Anulacion.FechaRegistro = time.Now()
 	var consecutivo int
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
-						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad
+						FROM financiera.anulacion_disponibilidad
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"anulacion_disponibilidad_apropiacion as ada
+						financiera.anulacion_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion = anulacion_disponibilidad.id
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion
+						financiera.disponibilidad_apropiacion
 						ON
 						disponibilidad_apropiacion.id = ada.disponibilidad_apropiacion
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad
+						financiera.disponibilidad
 						ON
 						disponibilidad.id = disponibilidad_apropiacion.disponibilidad
 						WHERE vigencia = ?`, m.Disponibilidad_apropiacion[0].Disponibilidad.Vigencia).QueryRow(&consecutivo)
@@ -354,6 +354,7 @@ func AnulacionTotal(m *Info_disponibilidad_a_anular) (alerta []string, err error
 	/*if acumCdp > 0 {
 		m.Disponibilidad_apropiacion[0].Disponibilidad.Estado = &EstadoDisponibilidad{Id: 3}
 		o.Update(m.Disponibilidad_apropiacion[0].Disponibilidad)
+
 	} else {
 		o.Rollback()
 	}*/
@@ -433,17 +434,17 @@ func AnulacionParcial(m *Info_disponibilidad_a_anular) (alerta []string, err err
 	m.Anulacion.FechaRegistro = time.Now()
 	var consecutivo int
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
-						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad
+						FROM financiera.anulacion_disponibilidad
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"anulacion_disponibilidad_apropiacion as ada
+						financiera.anulacion_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion = anulacion_disponibilidad.id
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion
+						financiera.disponibilidad_apropiacion
 						ON
 						disponibilidad_apropiacion.id = ada.disponibilidad_apropiacion
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad
+						financiera.disponibilidad
 						ON
 						disponibilidad.id = disponibilidad_apropiacion.disponibilidad
 						WHERE vigencia = ?`, m.Disponibilidad_apropiacion[0].Disponibilidad.Vigencia).QueryRow(&consecutivo)
@@ -502,12 +503,14 @@ func AnulacionParcial(m *Info_disponibilidad_a_anular) (alerta []string, err err
 	o.Commit()
 	/*var acumCDP float64
 	acumCDP = 0
+
 	for i := 0; i < len(m.Disponibilidad_apropiacion); i++ {
 		var saldoCDP float64
 		if m.Disponibilidad_apropiacion[i].FuenteFinanciamiento != nil {
 			saldoCDP, err = GetValorActualCDP(m.Disponibilidad_apropiacion[i].Disponibilidad.Id)
 		} else {
 			saldoCDP, err = GetValorActualCDP(m.Disponibilidad_apropiacion[i].Disponibilidad.Id)
+
 		}
 		if err != nil {
 			o.Rollback()
@@ -530,7 +533,7 @@ func AnulacionParcial(m *Info_disponibilidad_a_anular) (alerta []string, err err
 func SaldoCdp(id_cdp int, id_apropiacion int, id_fuente int) (saldo float64, comprometido float64, anulado float64, err error) {
 	/*o := orm.NewOrm()
 	var maps []orm.Params
-	o.Raw(`SELECT * FROM `+beego.AppConfig.String("PGschemas")+`.saldo_cdp WHERE id = ? AND apropiacion = ? `, id_cdp, id_apropiacion).Values(&maps)
+	o.Raw(`SELECT * FROM financiera.saldo_cdp WHERE id = ? AND apropiacion = ? `, id_cdp, id_apropiacion).Values(&maps)
 	fmt.Println("maps: ", maps)
 	if maps[0]["valor"] == nil {
 		valor = 0
@@ -556,8 +559,8 @@ func ValorCdp(id_cdp int, id_apropiacion int, id_fuente int) (valor float64, err
 			            disponibilidad_apropiacion.apropiacion,
 			            COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
 			            COALESCE(sum(disponibilidad_apropiacion.valor),0) AS valor
-			           FROM `+beego.AppConfig.String("PGschemas")+`.disponibilidad
-			             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+			           FROM financiera.disponibilidad
+			             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
 			          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion,disponibilidad_apropiacion.fuente_financiamiento) as saldo
 								WHERE id = ? AND apropiacion= ? AND fuente_financiamiento = ?;`, id_cdp, id_apropiacion, id_fuente).Values(&maps)
 	if maps == nil {
@@ -577,9 +580,9 @@ func ComprometidoCdp(id_cdp int, id_apropiacion int, id_fuente int) (valor float
 				            disponibilidad_apropiacion.apropiacion,
 				            COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
 				            COALESCE(sum(registro_presupuestal_disponibilidad_apropiacion.valor),0) AS valor
-				           FROM `+beego.AppConfig.String("PGschemas")+`.disponibilidad
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+				           FROM financiera.disponibilidad
+				             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+				             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
 				          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion, disponibilidad_apropiacion.fuente_financiamiento) as saldo
 									WHERE id = ? AND apropiacion=? AND fuente_financiamiento = ?;`, id_cdp, id_apropiacion, id_fuente).Values(&maps)
 	if maps == nil {
@@ -600,10 +603,10 @@ func AnuladoCdp(id_cdp int, id_apropiacion int, id_fuente int) (valor float64, e
 					            disponibilidad_apropiacion.apropiacion,
 					            COALESCE(disponibilidad_apropiacion.fuente_financiamiento,0) as fuente_financiamiento,
 					            COALESCE(sum(anulacion_disponibilidad_apropiacion.valor),0) AS valor
-					           FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad_apropiacion
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-											 JOIN `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad ON anulacion_disponibilidad.id = anulacion_disponibilidad_apropiacion.anulacion
+					           FROM financiera.anulacion_disponibilidad_apropiacion
+					             JOIN financiera.disponibilidad_apropiacion ON anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+					             JOIN financiera.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+											 JOIN financiera.anulacion_disponibilidad ON anulacion_disponibilidad.id = anulacion_disponibilidad_apropiacion.anulacion
 					          GROUP BY disponibilidad.id, anulacion_disponibilidad.estado_anulacion, disponibilidad_apropiacion.apropiacion,disponibilidad_apropiacion.fuente_financiamiento) as saldo
 										WHERE id = ? AND apropiacion = ? AND fuente_financiamiento = ? AND estado_anulacion = 3`, id_cdp, id_apropiacion, id_fuente).Values(&maps)
 	if maps == nil {
@@ -622,10 +625,10 @@ func AnuladoRpPorCDP(id_disponibilidad int, id_apropiacion int, id_fuente int) (
 					            disponibilidad_apropiacion.apropiacion,
 					            COALESCE(disponibilidad_apropiacion.fuente_financiamiento) as fuente_financiamiento,
 					            COALESCE(sum(anulacion_registro_presupuestal_disponibilidad_apropiacion.valor),0) AS valor
-					           FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_registro_presupuestal_disponibilidad_apropiacion
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion ON anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion = registro_presupuestal_disponibilidad_apropiacion.id
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+					           FROM financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion
+					             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion = registro_presupuestal_disponibilidad_apropiacion.id
+					             JOIN financiera.disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+					             JOIN financiera.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
 					          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion, disponibilidad_apropiacion.fuente_financiamiento) as saldo
 										WHERE id = ? AND apropiacion = ? AND fuente_financiamiento = ?;`, id_disponibilidad, id_apropiacion, id_fuente).Values(&maps)
 	fmt.Println("maps: ", maps)
@@ -644,7 +647,7 @@ func AnuladoRpPorCDP(id_disponibilidad int, id_apropiacion int, id_fuente int) (
 func GetValorTotalCDP(cdp_id int) (total float64, err error) {
 	o := orm.NewOrm()
 	var totalSql float64
-	err = o.Raw("select sum(valor) from "+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion where disponibilidad = ?", cdp_id).QueryRow(&totalSql)
+	err = o.Raw("select sum(valor) from financiera.disponibilidad_apropiacion where disponibilidad = ?", cdp_id).QueryRow(&totalSql)
 	if err == nil {
 		fmt.Println("total val: ", totalSql)
 		return totalSql, nil
@@ -659,9 +662,9 @@ func GetValorTotalComprometidoRpPorCDP(cdp_id int) (total float64, err error) {
 				            disponibilidad_apropiacion.apropiacion,
 				            COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
 				            COALESCE(sum(registro_presupuestal_disponibilidad_apropiacion.valor),0) AS valor
-				           FROM `+beego.AppConfig.String("PGschemas")+`.disponibilidad
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+				           FROM financiera.disponibilidad
+				             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+				             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
 				          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion, disponibilidad_apropiacion.fuente_financiamiento) as saldo
 									WHERE id = ? `, cdp_id).QueryRow(&totalSql)
 	if err == nil {
@@ -680,9 +683,9 @@ func GetValorTotalAnuladoRpPorCDP(cdp_id int) (total float64, err error) {
 				            disponibilidad_apropiacion.apropiacion,
 				            COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
 				            COALESCE(sum(registro_presupuestal_disponibilidad_apropiacion.valor),0) AS valor
-				           FROM `+beego.AppConfig.String("PGschemas")+`.disponibilidad
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-				             JOIN `+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+				           FROM financiera.disponibilidad
+				             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+				             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
 				          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion, disponibilidad_apropiacion.fuente_financiamiento) as saldo
 									WHERE id = ? `, cdp_id).QueryRow(&totalSql)
 	if err == nil {
@@ -701,9 +704,9 @@ func GetValorTotalAnuladoCDP(cdp_id int) (total float64, err error) {
 					            disponibilidad_apropiacion.apropiacion,
 					            COALESCE(disponibilidad_apropiacion.fuente_financiamiento,0) as fuente_financiamiento,
 					            COALESCE(sum(anulacion_disponibilidad_apropiacion.valor),0) AS valor
-					           FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad_apropiacion
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
-					             JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
+					           FROM financiera.anulacion_disponibilidad_apropiacion
+					             JOIN financiera.disponibilidad_apropiacion ON anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
+					             JOIN financiera.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
 					          GROUP BY disponibilidad.id, disponibilidad_apropiacion.apropiacion,disponibilidad_apropiacion.fuente_financiamiento) as saldo
 										WHERE id = ?`, cdp_id).QueryRow(&totalSql)
 	if err == nil {
@@ -731,12 +734,12 @@ func GetPrincDisponibilidadInfo(id int) (interface{}, error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("apropiacion as \"Apropiacion\", disponibilidad_apropiacion.valor as \"Valor\", rubro.codigo as \"Rubro\" , unidad_ejecutora as \"UnidadEjecutora\", fuente_financiamiento.codigo as \"FuenteCodigo\",  fuente_financiamiento.nombre as \"FuenteNombre\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		From("financiera.disponibilidad_apropiacion").
+		InnerJoin("financiera.apropiacion").
 		On("apropiacion.Id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("financiera.rubro").
 		On("rubro.id = apropiacion.rubro").
-		LeftJoin(""+beego.AppConfig.String("PGschemas")+"fuente_financiamiento").
+		LeftJoin("financiera.fuente_financiamiento").
 		On("disponibilidad_apropiacion.fuente_financiamiento = fuente_financiamiento.id").
 		Where("disponibilidad = ?")
 
@@ -755,7 +758,7 @@ func DeleteDisponibilidadData(id int) (err error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_proceso_externo").
+		From("financiera.disponibilidad_proceso_externo").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&maps); err != nil {
 		o.Rollback()
@@ -778,7 +781,7 @@ func DeleteDisponibilidadData(id int) (err error) {
 	var dispApr []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("financiera.disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispApr); err != nil {
 		o.Rollback()
@@ -817,7 +820,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_proceso_externo").
+		From("financiera.disponibilidad_proceso_externo").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&maps); err != nil {
 		o.Rollback()
@@ -840,7 +843,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var dispApr []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("financiera.disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispApr); err != nil {
 		o.Rollback()
@@ -864,7 +867,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var dispMov []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"movimiento_apropiacion_disponibilidad_apropiacion").
+		From("financiera.movimiento_apropiacion_disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispMov); err != nil {
 		o.Rollback()
