@@ -29,6 +29,11 @@ func init() {
 				&controllers.ApropiacionController{},
 			),
 		),
+		beego.NSNamespace("/anulacion_disponibilidad",
+			beego.NSInclude(
+				&controllers.AnulacionDisponibilidadController{},
+			),
+		),
 		beego.NSNamespace("/arbol_conceptos",
 			beego.NSInclude(
 				&controllers.ArbolConceptosController{},

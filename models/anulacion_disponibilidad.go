@@ -7,8 +7,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/astaxie/beego"
-
 	"github.com/astaxie/beego/orm"
 )
 
@@ -38,19 +36,19 @@ func init() {
 func GetTotalAnulacionDisponibilidades(vigencia int, unidadEjecutora int) (total int, err error) {
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("COUNT(DISTINCT(" + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad.id))").
-		From("" + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad_apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad.id = " + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad_apropiacion.anulacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion.id = " + beego.AppConfig.String("PGschemas") + "anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
-		On("" + beego.AppConfig.String("PGschemas") + "disponibilidad.id = " + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion.disponibilidad").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion.apropiacion = " + beego.AppConfig.String("PGschemas") + "apropiacion.id").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
-		On("" + beego.AppConfig.String("PGschemas") + "rubro.id = " + beego.AppConfig.String("PGschemas") + "apropiacion.rubro").
-		Where("" + beego.AppConfig.String("PGschemas") + "disponibilidad.vigencia = ? and " + beego.AppConfig.String("PGschemas") + "rubro.unidad_ejecutora = ? ")
+	qb.Select("COUNT(DISTINCT(financiera.anulacion_disponibilidad.id))").
+		From("financiera.anulacion_disponibilidad").
+		InnerJoin("financiera.anulacion_disponibilidad_apropiacion").
+		On("financiera.anulacion_disponibilidad.id = financiera.anulacion_disponibilidad_apropiacion.anulacion").
+		InnerJoin("financiera.disponibilidad_apropiacion").
+		On("financiera.disponibilidad_apropiacion.id = financiera.anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion").
+		InnerJoin("financiera.disponibilidad").
+		On("financiera.disponibilidad.id = financiera.disponibilidad_apropiacion.disponibilidad").
+		InnerJoin("financiera.apropiacion").
+		On("financiera.disponibilidad_apropiacion.apropiacion = financiera.apropiacion.id").
+		InnerJoin("financiera.rubro").
+		On("financiera.rubro.id = financiera.apropiacion.rubro").
+		Where("financiera.disponibilidad.vigencia = ? and financiera.rubro.unidad_ejecutora = ? ")
 
 	err = o.Raw(qb.String(), vigencia, unidadEjecutora).QueryRow(&total)
 	return
