@@ -149,6 +149,11 @@ func init() {
 				&controllers.RegistroPresupuestalController{},
 			),
 		),
+		beego.NSNamespace("/registro_presupuestal_disponibilidad_apropiacion",
+			beego.NSInclude(
+				&controllers.RegistroPresupuestalDisponibilidadApropiacionController{},
+			),
+		),
 		beego.NSNamespace("/tipo_cuenta_bancaria",
 			beego.NSInclude(
 				&controllers.TipoCuentaBancariaController{},
