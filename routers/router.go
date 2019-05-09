@@ -34,6 +34,11 @@ func init() {
 				&controllers.AnulacionDisponibilidadController{},
 			),
 		),
+		beego.NSNamespace("/anulacion_registro_presupuestal",
+			beego.NSInclude(
+				&controllers.AnulacionRegistroPresupuestalController{},
+			),
+		),
 		beego.NSNamespace("/arbol_conceptos",
 			beego.NSInclude(
 				&controllers.ArbolConceptosController{},
