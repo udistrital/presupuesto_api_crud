@@ -214,7 +214,7 @@ func SaldoApropiacion(Id int) (saldo map[string]float64, err error) {
 func VigenciaApropiacion() (ml []int, err error) {
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("DISTINCT vigencia").
-		From("" + beego.AppConfig.String("PGschemas") + "..apropiacion")
+		From("" + beego.AppConfig.String("PGschemas") + ".apropiacion")
 
 	sql := qb.String()
 	o := orm.NewOrm()
@@ -248,8 +248,8 @@ func ValorMovimientosPorApropiacion(Id int, tipoMov int, cuenta string) (valor f
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("COALESCE(sum(valor),0) as valor").
-		From("" + beego.AppConfig.String("PGschemas") + "..movimiento_apropiacion_disponibilidad_apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..movimiento_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion_disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion").
 		On("movimiento_apropiacion.id = movimiento_apropiacion_disponibilidad_apropiacion.movimiento_apropiacion").
 		Where(cuenta + " = ?").
 		And("tipo_movimiento_apropiacion = ?").

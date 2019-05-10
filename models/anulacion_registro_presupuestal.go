@@ -38,23 +38,23 @@ func init() {
 func GetTotalAnulacionRegistroPresupuestal(vigencia int, unidadEjecutora int) (total int, err error) {
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("COUNT(DISTINCT(" + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal.id))").
-		From("" + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal_disponibilidad_apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal.id = " + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal_disponibilidad_apropiacion.anulacion_registro_presupuestal").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..registro_presupuestal_disponibilidad_apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "..registro_presupuestal_disponibilidad_apropiacion.id = " + beego.AppConfig.String("PGschemas") + "..anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..registro_presupuestal").
-		On("" + beego.AppConfig.String("PGschemas") + "..registro_presupuestal.id = " + beego.AppConfig.String("PGschemas") + "..registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..disponibilidad_apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "..disponibilidad_apropiacion.id = " + beego.AppConfig.String("PGschemas") + "..registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..disponibilidad").
-		On("" + beego.AppConfig.String("PGschemas") + "..disponibilidad.id = " + beego.AppConfig.String("PGschemas") + "..disponibilidad_apropiacion.disponibilidad").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..apropiacion").
-		On("" + beego.AppConfig.String("PGschemas") + "..disponibilidad_apropiacion.apropiacion = " + beego.AppConfig.String("PGschemas") + "..apropiacion.id").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "..rubro").
-		On("" + beego.AppConfig.String("PGschemas") + "..rubro.id = " + beego.AppConfig.String("PGschemas") + "..apropiacion.rubro").
-		Where("" + beego.AppConfig.String("PGschemas") + "..registro_presupuestal.vigencia = ? and " + beego.AppConfig.String("PGschemas") + "..rubro.unidad_ejecutora = ? ")
+	qb.Select("COUNT(DISTINCT(" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal.id))").
+		From("" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion").
+		On("" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal.id = " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion.anulacion_registro_presupuestal").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion").
+		On("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion.id = " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal").
+		On("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal.id = " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
+		On("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion.id = " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad").
+		On("" + beego.AppConfig.String("PGschemas") + ".disponibilidad.id = " + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion.disponibilidad").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
+		On("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion.apropiacion = " + beego.AppConfig.String("PGschemas") + ".apropiacion.id").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
+		On("" + beego.AppConfig.String("PGschemas") + ".rubro.id = " + beego.AppConfig.String("PGschemas") + ".apropiacion.rubro").
+		Where("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal.vigencia = ? and " + beego.AppConfig.String("PGschemas") + ".rubro.unidad_ejecutora = ? ")
 
 	err = o.Raw(qb.String(), vigencia, unidadEjecutora).QueryRow(&total)
 	return
