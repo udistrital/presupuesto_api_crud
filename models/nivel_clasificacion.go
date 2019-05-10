@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -159,7 +160,7 @@ func DeleteNivelClasificacion(id int) (err error) {
 // row doesn't exist
 func GetPrimerNivelClasificacion() (v *NivelClasificacion, err error) {
 	o := orm.NewOrm()
-	if err = o.Raw("select * from financiera.nivel_clasificacion_cuenta_contable  where id not in (select nivel_hijo from financiera.estructura_niveles_clasificacion_cuenta_contable) and id in (select nivel_padre from financiera.estructura_niveles_clasificacion_cuenta_contable) order by id").QueryRow(&v); err == nil {
+	if err = o.Raw("select * from " + beego.AppConfig.String("PGschemas") + ".nivel_clasificacion_cuenta_contable  where id not in (select nivel_hijo from " + beego.AppConfig.String("PGschemas") + ".estructura_niveles_clasificacion_cuenta_contable) and id in (select nivel_padre from " + beego.AppConfig.String("PGschemas") + ".estructura_niveles_clasificacion_cuenta_contable) order by id").QueryRow(&v); err == nil {
 		return v, nil
 	}
 	return nil, err

@@ -252,7 +252,7 @@ func DeleteMovimientoFuenteFinanciamientoTr(id int) (err error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From("" + beego.AppConfig.String("PGschemas") + "fuente_financiamiento_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".fuente_financiamiento_apropiacion").
 		Where("fuente_financiamiento = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&maps); err != nil {
 		o.Rollback()
@@ -265,7 +265,7 @@ func DeleteMovimientoFuenteFinanciamientoTr(id int) (err error) {
 			var maps2 []orm.Params
 			qb2, _ := orm.NewQueryBuilder("mysql")
 			qb2.Select("id as \"Id\"").
-				From("" + beego.AppConfig.String("PGschemas") + "movimiento_fuente_financiamiento_apropiacion").
+				From("" + beego.AppConfig.String("PGschemas") + ".movimiento_fuente_financiamiento_apropiacion").
 				Where("fuente_financiamiento_apropiacion = ?")
 			if _, errAux := o.Raw(qb2.String(), idFuenteApr).Values(&maps2); errAux != nil {
 				o.Rollback()

@@ -171,7 +171,7 @@ func GetSumMovimientos(tipoDocumento int, codigoDocumento int) (totalesMov []orm
 	o.Begin()
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("sum(debito) as debito, sum(credito) as credito").
-		From("financiera.movimiento_contable").
+		From("" + beego.AppConfig.String("PGschemas") + ".movimiento_contable").
 		Where("tipo_documento_afectante = ?").
 		And("codigo_documento_afectante = ?")
 	_, err := o.Raw(qb.String(), tipoDocumento, codigoDocumento).Values(&totalesMov)

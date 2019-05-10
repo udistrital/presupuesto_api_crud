@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/fatih/structs"
 	"github.com/udistrital/utils_oas/formatdata"
@@ -67,14 +68,14 @@ func AddRegistoPresupuestal(m *DatosRegistroPresupuestal) (id int64, err error) 
 	var consecutivo int
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("COALESCE(MAX(numero_registro_presupuestal), 0)+1 as consecutivo").
-		From("financiera.registro_presupuestal").
-		InnerJoin("financiera.registro_presupuestal_disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion").
 		On("registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id").
-		InnerJoin("financiera.disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 		On("registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id").
-		InnerJoin("financiera.apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin("financiera.rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 		On("apropiacion.rubro = rubro.id").
 		Where("registro_presupuestal.vigencia = ?").
 		And("rubro.unidad_ejecutora = ?")
@@ -269,7 +270,7 @@ func DeleteRegistroPresupuestal(id int) (err error) {
 func SaldoRp(id_rp int, id_apropiacion int, id_fuente int) (saldo float64, comprometido float64, anulado float64, err error) {
 	/*o := orm.NewOrm()
 	var maps []orm.Params
-	o.Raw(`SELECT * FROM financiera.saldo_rp WHERE id = ? AND apropiacion = ? `, id_rp, id_apropiacion).Values(&maps)
+	o.Raw(`SELECT * FROM " + beego.AppConfig.String("PGschemas") + ".saldo_rp WHERE id = ? AND apropiacion = ? `, id_rp, id_apropiacion).Values(&maps)
 	fmt.Println("maps: ", maps)
 	if maps[0]["valor"] == nil {
 		valor = 0
@@ -293,9 +294,9 @@ func ValorRp(id_rp int, id_apropiacion int, id_fuente int) (valor float64, err e
             disponibilidad_apropiacion.apropiacion,
             COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
             sum(registro_presupuestal_disponibilidad_apropiacion.valor) AS valor
-           FROM financiera.registro_presupuestal_disponibilidad_apropiacion
-             JOIN financiera.registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
-             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
+           FROM " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
+             JOIN " + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
           GROUP BY registro_presupuestal.id, disponibilidad_apropiacion.apropiacion,disponibilidad_apropiacion.fuente_financiamiento) as saldo
           WHERE id = ? AND apropiacion= ? AND fuente_financiamiento = ?;`, id_rp, id_apropiacion, id_fuente).Values(&maps)
 	fmt.Println("maps: ", maps)
@@ -316,19 +317,19 @@ func ComprometidoRp(id_rp int, id_apropiacion int, id_fuente int) (valor float64
             apropiacion.id AS apropiacion,
             COALESCE(disponibilidad_apropiacion.fuente_financiamiento, 0) as fuente_financiamiento,
             sum(concepto_orden_pago.valor) AS valor
-           FROM financiera.concepto_orden_pago
-             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = concepto_orden_pago.registro_presupuestal_disponibilidad_apropiacion
+           FROM " + beego.AppConfig.String("PGschemas") + ".concepto_orden_pago
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = concepto_orden_pago.registro_presupuestal_disponibilidad_apropiacion
              AND
 			concepto_orden_pago.orden_de_pago = 
 				(
-					SELECT orden_de_pago FROM financiera.orden_pago_estado_orden_pago
+					SELECT orden_de_pago FROM " + beego.AppConfig.String("PGschemas") + ".orden_pago_estado_orden_pago
 						WHERE orden_pago = concepto_orden_pago.orden_de_pago
 						AND estado_orden_pago NOT IN (3,5)
 						ORDER BY fecha_registro DESC
 						LIMIT 1 		) 
-             JOIN financiera.registro_presupuestal ON registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
-             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
-             JOIN financiera.apropiacion ON financiera.apropiacion.id = disponibilidad_apropiacion.apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal ON registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
+             JOIN " + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".apropiacion ON " + beego.AppConfig.String("PGschemas") + ".apropiacion.id = disponibilidad_apropiacion.apropiacion
           	GROUP BY registro_presupuestal.id, apropiacion.id, fuente_financiamiento) as comprometido
           	WHERE id = ? AND apropiacion= ? AND fuente_financiamiento = ?`, id_rp, id_apropiacion, id_fuente).Values(&maps)
 	fmt.Println("maps: ", maps)
@@ -351,11 +352,11 @@ func AnuladoRp(id_rp int, id_apropiacion int, id_fuente int) (valor float64, err
 			estado_anulacion,
             COALESCE(disponibilidad_apropiacion.fuente_financiamiento,0) as fuente_financiamiento,
             sum(anulacion_registro_presupuestal_disponibilidad_apropiacion.valor) AS valor
-		   FROM financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion
-			   JOIN financiera.anulacion_registro_presupuestal ON anulacion_registro_presupuestal.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.anulacion_registro_presupuestal
-             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion
-             JOIN financiera.registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
-             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
+		   FROM " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion
+			   JOIN " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal ON anulacion_registro_presupuestal.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.anulacion_registro_presupuestal
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
+             JOIN " + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
           GROUP BY anulacion_registro_presupuestal.estado_anulacion,registro_presupuestal.id, disponibilidad_apropiacion.apropiacion, disponibilidad_apropiacion.fuente_financiamiento) as anulaciones
 										WHERE id = ? AND apropiacion = ? AND fuente_financiamiento = ? AND estado_anulacion = ?`, id_rp, id_apropiacion, id_fuente, 3).Values(&maps)
 	if maps == nil {
@@ -378,17 +379,17 @@ func AnulacionTotalRp(m *Info_rp_a_anular) (alerta []string, err error) {
 	m.Anulacion.FechaRegistro = time.Now()
 	var consecutivo int
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
-						FROM financiera.anulacion_registro_presupuestal
+						FROM " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal
 						JOIN
-						financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
+						" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion_registro_presupuestal = anulacion_registro_presupuestal.id
 						JOIN
-						financiera.registro_presupuestal_disponibilidad_apropiacion
+						" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion
 						ON
 						registro_presupuestal_disponibilidad_apropiacion.id = ada.registro_presupuestal_disponibilidad_apropiacion
 						JOIN
-						financiera.registro_presupuestal
+						" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal
 						ON
 						registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
 						WHERE vigencia = ?`, m.Rp_apropiacion[0].RegistroPresupuestal.Vigencia).QueryRow(&consecutivo)
@@ -477,17 +478,17 @@ func AnulacionParcialRp(m *Info_rp_a_anular) (alerta []string, err error) {
 	m.Anulacion.FechaRegistro = time.Now()
 	var consecutivo int
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
-						FROM financiera.anulacion_registro_presupuestal
+						FROM " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal
 						JOIN
-						financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
+						" + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion_registro_presupuestal = anulacion_registro_presupuestal.id
 						JOIN
-						financiera.registro_presupuestal_disponibilidad_apropiacion
+						" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion
 						ON
 						registro_presupuestal_disponibilidad_apropiacion.id = ada.registro_presupuestal_disponibilidad_apropiacion
 						JOIN
-						financiera.registro_presupuestal
+						" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal
 						ON
 						registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
 						WHERE vigencia = ?`, m.Rp_apropiacion[0].RegistroPresupuestal.Vigencia).QueryRow(&consecutivo)
@@ -638,7 +639,7 @@ func AprobacionAnulacionRp(m *AnulacionRegistroPresupuestal) (alert Alert, err e
 func GetValorTotalRp(rp_id int) (total float64, err error) {
 	o := orm.NewOrm()
 	var totalSql float64
-	err = o.Raw("select sum(valor) from financiera.registro_presupuestal_disponibilidad_apropiacion where registro_presupuestal = ?", rp_id).QueryRow(&totalSql)
+	err = o.Raw("select sum(valor) from " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion where registro_presupuestal = ?", rp_id).QueryRow(&totalSql)
 	if err == nil {
 		return totalSql, nil
 	}
@@ -649,10 +650,10 @@ func GetValorTotalComprometidoRp(rp_id int) (total float64, err error) {
 	var totalSql float64
 	err = o.Raw(`SELECT valor FROM(SELECT registro_presupuestal.id,
              sum(concepto_orden_pago.valor) AS valor
-            FROM financiera.orden_pago
-              JOIN financiera.concepto_orden_pago ON concepto_orden_pago.orden_de_pago = orden_pago.id
-              JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON concepto_orden_pago.registro_presupuestal_disponibilidad_apropiacion = registro_presupuestal_disponibilidad_apropiacion.id
-              JOIN financiera.registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
+            FROM " + beego.AppConfig.String("PGschemas") + ".orden_pago
+              JOIN " + beego.AppConfig.String("PGschemas") + ".concepto_orden_pago ON concepto_orden_pago.orden_de_pago = orden_pago.id
+              JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion ON concepto_orden_pago.registro_presupuestal_disponibilidad_apropiacion = registro_presupuestal_disponibilidad_apropiacion.id
+              JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
            GROUP BY registro_presupuestal.id) as comprometido
  					WHERE id = ?`, rp_id).QueryRow(&totalSql)
 	if err == nil {
@@ -668,10 +669,10 @@ func GetValorTotalAnuladoRp(rp_id int) (total float64, err error) {
 	var totalSql float64
 	err = o.Raw(`SELECT valor FROM (SELECT registro_presupuestal.id,
             sum(anulacion_registro_presupuestal_disponibilidad_apropiacion.valor) AS valor
-           FROM financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion
-             JOIN financiera.registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion
-             JOIN financiera.registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
-             JOIN financiera.disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
+           FROM " + beego.AppConfig.String("PGschemas") + ".anulacion_registro_presupuestal_disponibilidad_apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion ON registro_presupuestal_disponibilidad_apropiacion.id = anulacion_registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal_disponibilidad_apropiacion
+             JOIN " + beego.AppConfig.String("PGschemas") + ".registro_presupuestal ON registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal = registro_presupuestal.id
+             JOIN " + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion ON disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion
           GROUP BY registro_presupuestal.id) as anulaciones
 					WHERE id = ?`, rp_id).QueryRow(&totalSql)
 	if err == nil {
@@ -699,14 +700,14 @@ func GetTotalRp(vigencia int, UnidadEjecutora int, finicio string, ffin string) 
 	qb, _ := orm.NewQueryBuilder("mysql")
 	if finicio != "" && ffin != "" {
 		qb.Select("COUNT(DISTINCT(registro_presupuestal))").
-			From("financiera.registro_presupuestal").
-			InnerJoin("financiera.registro_presupuestal_disponibilidad_apropiacion").
+			From("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion").
 			On("registro_presupuestal.id=registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal").
-			InnerJoin("financiera.disponibilidad_apropiacion").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 			On("disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion").
-			InnerJoin("financiera.apropiacion").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 			On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-			InnerJoin("financiera.rubro").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 			On("rubro.id = apropiacion.rubro").
 			Where("registro_presupuestal.vigencia = ?").
 			And("fecha_registro >= ?").
@@ -716,14 +717,14 @@ func GetTotalRp(vigencia int, UnidadEjecutora int, finicio string, ffin string) 
 		return
 	}
 	qb.Select("COUNT(DISTINCT(registro_presupuestal))").
-		From("financiera.registro_presupuestal").
-		InnerJoin("financiera.registro_presupuestal_disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion").
 		On("registro_presupuestal.id=registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal").
-		InnerJoin("financiera.disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 		On("disponibilidad_apropiacion.id = registro_presupuestal_disponibilidad_apropiacion.disponibilidad_apropiacion").
-		InnerJoin("financiera.apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin("financiera.rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 		On("rubro.id = apropiacion.rubro").
 		Where("registro_presupuestal.vigencia = ?").
 		And("unidad_ejecutora = ?")
@@ -744,7 +745,7 @@ func DeleteRpData(id int) (err error) {
 	var dispApr []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From("financiera.registro_presupuestal_disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".registro_presupuestal_disponibilidad_apropiacion").
 		Where("registro_presupuestal = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispApr); err != nil {
 		o.Rollback()

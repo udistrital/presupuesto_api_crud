@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/udistrital/utils_oas/formatdata"
 )
@@ -176,8 +177,8 @@ func ConsecutivoOrdenPago(grupoSecuencia string) (StringConsecutivo string, grSe
 	if grupoSecuencia != "" {
 		qb, _ := orm.NewQueryBuilder("mysql")
 		qb.Select("COALESCE(MAX(consecutivo), 0)+1 as consecutivo").
-			From("financiera.orden_pago as op").
-			InnerJoin("financiera.sub_tipo_orden_pago as sub").On("sub.id = op.sub_tipo_orden_pago").
+			From("" + beego.AppConfig.String("PGschemas") + ".orden_pago as op").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".sub_tipo_orden_pago as sub").On("sub.id = op.sub_tipo_orden_pago").
 			And("sub.grupo_secuencia = ?")
 		StringConsecutivo, grSecuencia := qb.String(), grupoSecuencia
 		return StringConsecutivo, grSecuencia, nil
@@ -450,7 +451,7 @@ func ActualizarOpProveedor(DataActualizarOpProveedor map[string]interface{}) (al
 
 	// Eliminar Conceptos Orden de Pagos y Movimientos contables
 	if len(conceptoOrdenPago) > 0 {
-		_, err = o.Raw("DELETE FROM financiera.concepto_orden_pago where orden_de_pago = ?", ordenPago.Id).Exec()
+		_, err = o.Raw("DELETE FROM " + beego.AppConfig.String("PGschemas") + ".concepto_orden_pago where orden_de_pago = ?", ordenPago.Id).Exec()
 		if err != nil {
 			alerta.Type = "error"
 			alerta.Code = "E_OPP_UPD_02"
@@ -460,7 +461,7 @@ func ActualizarOpProveedor(DataActualizarOpProveedor map[string]interface{}) (al
 		}
 	}
 	if len(movimientoContable) > 0 {
-		_, err = o.Raw("DELETE FROM financiera.movimiento_contable where codigo_documento_afectante = ?", ordenPago.Id).Exec()
+		_, err = o.Raw("DELETE FROM " + beego.AppConfig.String("PGschemas") + ".movimiento_contable where codigo_documento_afectante = ?", ordenPago.Id).Exec()
 		if err != nil {
 			alerta.Type = "error"
 			alerta.Code = "E_OPP_UPD_03"

@@ -124,9 +124,9 @@ func GetAllCuentaContable(query map[string]string, fields []string, sortby []str
 					rul = "sum(credito) - sum(debito)"
 				}
 				o.Raw(`select sum(saldo) from (
-							select saldo from financiera.saldo_cuenta_contable where cuenta_contable=? and anio = ? and mes = ?
+							select saldo from " + beego.AppConfig.String("PGschemas") + ".saldo_cuenta_contable where cuenta_contable=? and anio = ? and mes = ?
 							union
-							select `+rul+` saldo from financiera.movimiento_contable
+							select `+rul+` saldo from " + beego.AppConfig.String("PGschemas") + ".movimiento_contable
 							 where cuenta_contable=? and fecha >= ?::DATE group by cuenta_contable ) a`, v.Id, year, month, v.Id, firstdate).QueryRow(&v.Saldo)
 				ml = append(ml, v)
 			}

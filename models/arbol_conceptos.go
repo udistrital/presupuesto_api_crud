@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -27,7 +28,7 @@ func MakeTreeConcepto() (a []ConceptoArbol) {
 	o := orm.NewOrm()
 	//Arreglo
 	var arbol []ConceptoArbol
-	_, err := o.Raw("select * from financiera.concepto_tesoral where id not in (select concepto_hijo from financiera.estructura_conceptos_tesorales) order by id;").QueryRows(&arbol)
+	_, err := o.Raw("select * from " + beego.AppConfig.String("PGschemas") + ".concepto_tesoral where id not in (select concepto_hijo from " + beego.AppConfig.String("PGschemas") + ".estructura_conceptos_tesorales) order by id;").QueryRows(&arbol)
 
 	//Para realizar un related sobre los conceptos en el arbol
 	/*for _, concepto := range arbol {
@@ -61,7 +62,7 @@ func MakeBranches(Padre *ConceptoArbol) (a []ConceptoArbol) {
 	//Arreglo
 	var arbol []ConceptoArbol
 
-	_, err := o.Raw("select a.* from financiera.concepto_tesoral a left join financiera.estructura_conceptos_tesorales b on a.id =b.concepto_hijo where b.concepto_padre=" + idpadre + " ORDER BY a.id").QueryRows(&arbol)
+	_, err := o.Raw("select a.* from " + beego.AppConfig.String("PGschemas") + ".concepto_tesoral a left join " + beego.AppConfig.String("PGschemas") + ".estructura_conceptos_tesorales b on a.id =b.concepto_hijo where b.concepto_padre=" + idpadre + " ORDER BY a.id").QueryRows(&arbol)
 	//Condicional si el error es nulo
 	if err == nil {
 		//Llena el elemento Opciones en la estructura del menú padre

@@ -34,7 +34,7 @@ func GetTotalProductos() (total int, err error) {
 	o := orm.NewOrm()
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("COUNT(id)").
-		From("" + beego.AppConfig.String("PGschemas") + "producto")
+		From("" + beego.AppConfig.String("PGschemas") + ".producto")
 	err = o.Raw(qb.String()).QueryRow(&total)
 	return
 }

@@ -175,7 +175,7 @@ func AddIngresotr(m map[string]interface{}) (ingreso Ingreso, err error) {
 		ingreso.Vigencia = float64(time.Now().Year())
 		var consecutivo float64
 		o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
-						FROM financiera.ingreso WHERE vigencia = ?`, ingreso.Vigencia).QueryRow(&consecutivo)
+						FROM " + beego.AppConfig.String("PGschemas") + ".ingreso WHERE vigencia = ?`, ingreso.Vigencia).QueryRow(&consecutivo)
 		ingreso.Consecutivo = consecutivo
 		if !reflect.DeepEqual(docGen, voidDocGen) {
 			ingreso.DocumentoGenerador = &DocumentoGenerador{Id: int(idDocgenerador)}
