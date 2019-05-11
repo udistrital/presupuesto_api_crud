@@ -163,7 +163,7 @@ func SetVariacionProducto(m *ProductoRubro) (total float64, err error) {
 	qb, _ := orm.NewQueryBuilder("mysql")
 	o.Begin()
 	qb.Select("SUM(valor_distribucion) as total").
-		From("" + beego.AppConfig.String("PGschemas") + "producto_rubro").
+		From("" + beego.AppConfig.String("PGschemas") + ".producto_rubro").
 		Where("rubro = ?").
 		And("activo = true").
 		And("id NOT IN (?)")
@@ -207,7 +207,7 @@ func AddProductoRubrotr(m *ProductoRubro) (total float64, err error) {
 	qb, _ := orm.NewQueryBuilder("mysql")
 	o.Begin()
 	qb.Select("SUM(valor_distribucion) as total").
-		From("" + beego.AppConfig.String("PGschemas") + "producto_rubro").
+		From("" + beego.AppConfig.String("PGschemas") + ".producto_rubro").
 		Where("rubro = ?").
 		And("activo = true")
 	err = o.Raw(qb.String(), m.Rubro.Id).QueryRow(&total)

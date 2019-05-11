@@ -29,6 +29,16 @@ func init() {
 				&controllers.ApropiacionController{},
 			),
 		),
+		beego.NSNamespace("/producto",
+			beego.NSInclude(
+				&controllers.ProductoController{},
+			),
+		),
+		beego.NSNamespace("/producto_rubro",
+			beego.NSInclude(
+				&controllers.ProductoRubroController{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

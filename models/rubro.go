@@ -109,7 +109,6 @@ func GetAllRubro(query map[string]string, group []string, fields []string, sortb
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {
-				o.LoadRelated(&v, "Concepto", 5)
 				//o.LoadRelated(&v, "ProductoRubro", 5, 0, 0, "-Activo")
 				ml = append(ml, v)
 			}
