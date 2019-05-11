@@ -157,14 +157,14 @@ func DeleteRubro(id int) (err error) {
 		var num int64
 		qb, _ := orm.NewQueryBuilder("mysql")
 		qb.Select("id").
-			From("" + beego.AppConfig.String("PGschemas") + "apropiacion").
+			From("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 			Where("rubro=?")
 		if _, err = o.Raw(qb.String(), id).QueryRows(&apropiaciones); err == nil {
 
 			if len(apropiaciones) == 0 {
 				qb, _ = orm.NewQueryBuilder("mysql")
 				qb.Select("id").
-					From("" + beego.AppConfig.String("PGschemas") + "rubro_rubro").
+					From("" + beego.AppConfig.String("PGschemas") + ".rubro_rubro").
 					//Where("rubro_padre=?").
 					Where("rubro_hijo=?")
 				if _, err = o.Raw(qb.String(), id).QueryRows(&rubrorubro); err == nil {
