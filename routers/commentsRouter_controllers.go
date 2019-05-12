@@ -79,6 +79,15 @@ func init() {
             Filters: nil,
             Params: nil})
 
+    beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:Date"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:Date"],
+        beego.ControllerComments{
+            Method: "FechaActual",
+            Router: `/FechaActual/:formato`,
+            AllowHTTPMethods: []string{"get"},
+            MethodParams: param.Make(),
+            Filters: nil,
+            Params: nil})
+
     beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"] = append(beego.GlobalControllerRouter["github.com/udistrital/presupuesto_crud/controllers:DisponibilidadController"],
         beego.ControllerComments{
             Method: "Post",

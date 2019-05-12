@@ -14,7 +14,7 @@ import (
 
 type Producto struct {
 	Id            int              `orm:"column(id);pk;auto"`
-	Nombre        string           `orm:"column(nombre)"`
+	Nombre        string           `orm:"column(nombre);unique"`
 	Descripcion   string           `orm:"column(descripcion);null"`
 	FechaRegistro time.Time        `orm:"column(fecha_registro);type(date)"`
 	ProductoRubro []*ProductoRubro `orm:"reverse(many)"`

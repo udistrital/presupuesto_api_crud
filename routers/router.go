@@ -39,6 +39,11 @@ func init() {
 				&controllers.ProductoRubroController{},
 			),
 		),
+		beego.NSNamespace("/date",
+			beego.NSInclude(
+				&controllers.Date{},
+			),
+		),
 	)
 	beego.AddNamespace(ns)
 }

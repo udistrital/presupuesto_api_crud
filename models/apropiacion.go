@@ -115,7 +115,7 @@ func GetAllApropiacion(query map[string]string, exclude map[string]string, field
 	}
 
 	var l []Apropiacion
-	qs = qs.OrderBy(sortFields...).RelatedSel(5)
+	qs = qs.OrderBy(sortFields...)
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {
