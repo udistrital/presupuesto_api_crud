@@ -9,7 +9,6 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/udistrital/utils_oas/formatdata"
 )
 
 type Apropiacion struct {
@@ -305,24 +304,12 @@ func ValorAnuladoCdpPorApropiacion(Id int) (valor float64, err error) {
 
 //AprobarPresupuesto... Aprobacion de presupuesto (cambio de estado).
 func AprobarPresupuesto(UnidadEjecutora int, Vigencia int) (err error) {
-	query := make(map[string]string)
 	o := orm.NewOrm()
-	query["Rubro.UnidadEjecutora"] = strconv.Itoa(UnidadEjecutora)
-	query["Vigencia"] = strconv.Itoa(Vigencia)
-	fmt.Println(query)
-	v, err := GetAllApropiacion(query, nil, nil, nil, nil, 0, -1)
-	o.Begin()
-	ap := Apropiacion{}
-	for _, apropiacion := range v {
-		formatdata.FillStruct(apropiacion, &ap)
-		ap.Estado.Id = 2
-		_, err = o.Update(&ap)
-		if err != nil {
-			o.Rollback()
-			return
-		}
-	}
-	o.Commit()
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb2, _ := orm.NewQueryBuilder("mysql")
+	qb2.Select("id").From(beego.AppConfig.String("PGschemas") + ".rubro").Where("unidad_ejecutora = ?")
+	qb.Update(beego.AppConfig.String("PGschemas") + ".apropiacion").Set("estado = ?").Where("vigencia = ? AND rubro in (" + qb2.String() + ")")
+	_, err = o.Raw(qb.String(), 2, Vigencia, UnidadEjecutora).Exec()
 	return
 }
 
