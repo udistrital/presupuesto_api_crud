@@ -29,14 +29,18 @@ func init() {
 // last inserted Id on success.
 func AddRubroRubro(m *RubroRubro) (id int64, err error) {
 	o := orm.NewOrm()
-	var apropiaciones interface{}
+	var apropiaciones []int
 	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("id").
+	qb.Select("apropiacion.id").
 		From("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
-		Where("rubro=?")
-	if _, err = o.Raw(qb.String(), id).QueryRows(&apropiaciones); err == nil {
-		err = errors.New("rubro tiene apropiacion")
-		return
+		InnerJoin(beego.AppConfig.String("PGschemas") + ".rubro").
+		On("apropiacion.rubro = rubro.id").
+		Where("rubro.codigo=?")
+	if _, err = o.Raw(qb.String(), m.RubroHijo.Codigo).QueryRows(&apropiaciones); err == nil {
+		if len(apropiaciones) > 0 {
+			err = errors.New("rubro tiene apropiacion")
+			return
+		}
 	}
 	o.Begin()
 	id_hijo, err := o.Insert(m.RubroHijo)
