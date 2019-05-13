@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -28,6 +29,15 @@ func init() {
 // last inserted Id on success.
 func AddRubroRubro(m *RubroRubro) (id int64, err error) {
 	o := orm.NewOrm()
+	var apropiaciones interface{}
+	qb, _ := orm.NewQueryBuilder("mysql")
+	qb.Select("id").
+		From("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
+		Where("rubro=?")
+	if _, err = o.Raw(qb.String(), id).QueryRows(&apropiaciones); err == nil {
+		err = errors.New("rubro tiene apropiacion")
+		return
+	}
 	o.Begin()
 	id_hijo, err := o.Insert(m.RubroHijo)
 	if err != nil {

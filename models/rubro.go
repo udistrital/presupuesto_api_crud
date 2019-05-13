@@ -33,6 +33,12 @@ func init() {
 // last inserted Id on success.
 func AddRubro(m *Rubro) (id int64, err error) {
 	o := orm.NewOrm()
+	qb2, _ := orm.NewQueryBuilder("mysql")
+	qb2.Select("id").From(beego.AppConfig.String("PGschemas") + ".rubro").Where("unidad_ejecutora = ? AND codigo = ?")
+	_, err = o.Raw(qb2.String(), m.UnidadEjecutora, m.Codigo).Exec()
+	if err != nil {
+		return
+	}
 	id, err = o.Insert(m)
 	return
 }
@@ -172,16 +178,21 @@ func DeleteRubro(id int) (err error) {
 
 						} else {
 							o.Rollback()
+							err = errors.New("erro en tr")
+							return
 						}
 					}
 				}
 			} else {
 				o.Rollback()
+				err = errors.New("erro en tr")
+				return
 			}
 
 		} else {
 			fmt.Println("Error 1 ", err)
 			o.Rollback()
+			return
 		}
 		if num, err = o.Delete(&Rubro{Id: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
@@ -190,6 +201,7 @@ func DeleteRubro(id int) (err error) {
 			fmt.Println("Error 2 ", err)
 
 			o.Rollback()
+			return
 		}
 	}
 	return
