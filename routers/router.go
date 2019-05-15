@@ -24,6 +24,16 @@ func init() {
 				&controllers.RubroRubroController{},
 			),
 		),
+		beego.NSNamespace("/rubro_homologado",
+			beego.NSInclude(
+				&controllers.RubroHomologadoController{},
+			),
+		),
+		beego.NSNamespace("/rubro_homologado_rubro",
+			beego.NSInclude(
+				&controllers.RubroHomologadoRubroController{},
+			),
+		),				
 		beego.NSNamespace("/apropiacion",
 			beego.NSInclude(
 				&controllers.ApropiacionController{},
