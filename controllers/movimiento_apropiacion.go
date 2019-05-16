@@ -86,7 +86,21 @@ func (c *MovimientoApropiacionController) RegistroSolicitudMovimientoApropiacion
 // @router /AprobarMovimietnoApropiacion [post]
 func (c *MovimientoApropiacionController) AprobarMovimietnoApropiacion() {
 	var v models.MovimientoApropiacion
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil && v.Vigencia == time.Now().Year() {
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			var alert []models.Alert
+			alt := models.Alert{}
+			alt.Code = "E_0458"
+			alt.Body = err
+			alt.Type = "error"
+			alert = append(alert, alt)
+			c.Ctx.Output.SetStatus(500)
+			c.Data["json"] = alert
+		}
+		c.ServeJSON()
+	}()
+	if err = json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil && v.Vigencia == time.Now().Year() {
 		if res, err := models.AprobarMovimietnoApropiaciontr(&v); err == nil && res != nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = res
@@ -100,15 +114,9 @@ func (c *MovimientoApropiacionController) AprobarMovimietnoApropiacion() {
 			c.Data["json"] = alert
 		}
 	} else {
-		var alert []models.Alert
-		alt := models.Alert{}
-		alt.Code = "E_0458"
-		alt.Body = err
-		alt.Type = "error"
-		alert = append(alert, alt)
-		c.Data["json"] = alert
+		panic(err.Error())
 	}
-	c.ServeJSON()
+
 }
 
 // Post ...

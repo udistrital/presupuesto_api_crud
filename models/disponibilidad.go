@@ -45,12 +45,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 	qb, _ := orm.NewQueryBuilder("mysql")
 	if finicio != "" && ffin != "" {
 		qb.Select("COUNT(DISTINCT(disponibilidad))").
-			From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+			From("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
 			On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
 			On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-			InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
 			On("rubro.id = apropiacion.rubro").
 			Where("disponibilidad.vigencia = ?").
 			And("fecha_registro >= ?").
@@ -60,12 +60,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 		return
 	}
 	qb.Select("COUNT(DISTINCT(disponibilidad))").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
 		On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
 		On("rubro.id = apropiacion.rubro").
 		Where("disponibilidad.vigencia = ?").
 		And("unidad_ejecutora = ?")
@@ -84,12 +84,12 @@ func AddDisponibilidad(m map[string]interface{}) (v Disponibilidad, err error) {
 	var procesoExterno DisponibilidadProcesoExterno
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("COALESCE(MAX(numero_disponibilidad), 0)+1 as consecutivo").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".disponibilidad").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 		On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 		On("apropiacion.rubro = rubro.id").
 		Where("disponibilidad.vigencia = ?").
 		And("rubro.unidad_ejecutora = ?")
@@ -731,12 +731,12 @@ func GetPrincDisponibilidadInfo(id int) (interface{}, error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("apropiacion as \"Apropiacion\", disponibilidad_apropiacion.valor as \"Valor\", rubro.codigo as \"Rubro\" , unidad_ejecutora as \"UnidadEjecutora\", fuente_financiamiento.codigo as \"FuenteCodigo\",  fuente_financiamiento.nombre as \"FuenteNombre\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
 		On("apropiacion.Id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin(""+beego.AppConfig.String("PGschemas")+"rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
 		On("rubro.id = apropiacion.rubro").
-		LeftJoin(""+beego.AppConfig.String("PGschemas")+"fuente_financiamiento").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + "fuente_financiamiento").
 		On("disponibilidad_apropiacion.fuente_financiamiento = fuente_financiamiento.id").
 		Where("disponibilidad = ?")
 
@@ -755,7 +755,7 @@ func DeleteDisponibilidadData(id int) (err error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_proceso_externo").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad_proceso_externo").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&maps); err != nil {
 		o.Rollback()
@@ -778,7 +778,7 @@ func DeleteDisponibilidadData(id int) (err error) {
 	var dispApr []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispApr); err != nil {
 		o.Rollback()
@@ -817,7 +817,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var maps []orm.Params
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_proceso_externo").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad_proceso_externo").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&maps); err != nil {
 		o.Rollback()
@@ -840,7 +840,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var dispApr []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispApr); err != nil {
 		o.Rollback()
@@ -864,7 +864,7 @@ func DeleteDisponibilidadMovimiento(id int) (err error) {
 	var dispMov []orm.Params
 	qb, _ = orm.NewQueryBuilder("mysql")
 	qb.Select("id as \"Id\"").
-		From(""+beego.AppConfig.String("PGschemas")+"movimiento_apropiacion_disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + "movimiento_apropiacion_disponibilidad_apropiacion").
 		Where("disponibilidad = ?")
 	if _, err = o.Raw(qb.String(), id).Values(&dispMov); err != nil {
 		o.Rollback()

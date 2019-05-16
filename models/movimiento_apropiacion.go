@@ -229,6 +229,7 @@ func AprobarMovimietnoApropiaciontr(movimiento *MovimientoApropiacion) (alert []
 		alt.Body = map[string]interface{}{"Movimiento": movimiento, "Disponibilidad": 0, "Apropiacion": 0}
 		alert = append(alert, alt)
 		o.Rollback()
+		return
 	} else {
 		alt := Alert{}
 		alt.Type = "success"
@@ -252,20 +253,20 @@ func MovimientosByApropiacion(apropiacionId int) (res []MovimientosPorApropiacio
 		"tipo_movimiento_apropiacion.nombre as tipo," +
 		"n_oficio," +
 		"f_oficio").
-		From("" + beego.AppConfig.String("PGschemas") + "movimiento_apropiacion").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "movimiento_apropiacion_disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion_disponibilidad_apropiacion").
 		On("movimiento_apropiacion = movimiento_apropiacion.id").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "tipo_movimiento_apropiacion").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".tipo_movimiento_apropiacion").
 		On("tipo_movimiento_apropiacion.id = tipo_movimiento_apropiacion").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion as apr_cr").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion as apr_cr").
 		On("cuenta_credito = apr_cr.id").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "rubro as rb_cr").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".rubro as rb_cr").
 		On("rb_cr.id = apr_cr.rubro").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion as apr_ccr").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion as apr_ccr").
 		On("movimiento_apropiacion_disponibilidad_apropiacion.cuenta_contra_credito = apr_ccr.id").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "rubro as rb_ccr").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".rubro as rb_ccr").
 		On("rb_ccr.id = apr_ccr.rubro").
-		LeftJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
+		LeftJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad").
 		On("disponibilidad.id = movimiento_apropiacion_disponibilidad_apropiacion.disponibilidad").
 		Where("movimiento_apropiacion.estado_movimiento_apropiacion = 2 AND (movimiento_apropiacion_disponibilidad_apropiacion.cuenta_contra_credito = ? OR cuenta_credito = ?)")
 	_, err = o.Raw(qb.String(), apropiacionId, apropiacionId).QueryRows(&res)
