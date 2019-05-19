@@ -45,12 +45,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 	qb, _ := orm.NewQueryBuilder("mysql")
 	if finicio != "" && ffin != "" {
 		qb.Select("COUNT(DISTINCT(disponibilidad))").
-			From("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
-			InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
+			From("" + beego.AppConfig.String("PGschemas") + ".disponibilidad").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 			On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-			InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 			On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-			InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
+			InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 			On("rubro.id = apropiacion.rubro").
 			Where("disponibilidad.vigencia = ?").
 			And("fecha_registro >= ?").
@@ -60,12 +60,12 @@ func GetTotalDisponibilidades(vigencia int, unidadEjecutora int, finicio string,
 		return
 	}
 	qb.Select("COUNT(DISTINCT(disponibilidad))").
-		From("" + beego.AppConfig.String("PGschemas") + "disponibilidad").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "disponibilidad_apropiacion").
+		From("" + beego.AppConfig.String("PGschemas") + ".disponibilidad").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".disponibilidad_apropiacion").
 		On("disponibilidad.id = disponibilidad_apropiacion.disponibilidad").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "apropiacion").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
 		On("apropiacion.id = disponibilidad_apropiacion.apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + "rubro").
+		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".rubro").
 		On("rubro.id = apropiacion.rubro").
 		Where("disponibilidad.vigencia = ?").
 		And("unidad_ejecutora = ?")
@@ -284,15 +284,15 @@ func AnulacionTotal(m *Info_disponibilidad_a_anular) (alerta []string, err error
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
 						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"anulacion_disponibilidad_apropiacion as ada
+						`+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion = anulacion_disponibilidad.id
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion
+						`+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion
 						ON
 						disponibilidad_apropiacion.id = ada.disponibilidad_apropiacion
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad
+						`+beego.AppConfig.String("PGschemas")+`.disponibilidad
 						ON
 						disponibilidad.id = disponibilidad_apropiacion.disponibilidad
 						WHERE vigencia = ?`, m.Disponibilidad_apropiacion[0].Disponibilidad.Vigencia).QueryRow(&consecutivo)
@@ -435,15 +435,15 @@ func AnulacionParcial(m *Info_disponibilidad_a_anular) (alerta []string, err err
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
 						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"anulacion_disponibilidad_apropiacion as ada
+						`+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion = anulacion_disponibilidad.id
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad_apropiacion
+						`+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion
 						ON
 						disponibilidad_apropiacion.id = ada.disponibilidad_apropiacion
 						JOIN
-						"+beego.AppConfig.String("PGschemas")+"disponibilidad
+						`+beego.AppConfig.String("PGschemas")+`.disponibilidad
 						ON
 						disponibilidad.id = disponibilidad_apropiacion.disponibilidad
 						WHERE vigencia = ?`, m.Disponibilidad_apropiacion[0].Disponibilidad.Vigencia).QueryRow(&consecutivo)

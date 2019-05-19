@@ -183,6 +183,13 @@ func (c *DisponibilidadController) Delete() {
 	c.ServeJSON()
 }
 
+// Anular ...
+// @Title Anular
+// @Description Anulate Disponibilidad
+// @Param	body		body 	models.Disponibilidad	true		"body for Disponibilidad content"
+// @Success 201 {int} models.Disponibilidad
+// @Failure 403 body is empty
+// @router /Anular [post]
 func (c *DisponibilidadController) Anular() {
 	var v models.Info_disponibilidad_a_anular
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
@@ -203,12 +210,19 @@ func (c *DisponibilidadController) Anular() {
 		} else {
 			c.Data["json"] = "No se pudo cargar el tipo de la anulacion"
 		}
-
 	} else {
 		c.Data["json"] = err
 	}
 	c.ServeJSON()
 }
+
+// SaldoCdp ...
+// @Title SaldoCdp
+// @Description Balance Disponibilidad
+// @Param	body		body 	models.Disponibilidad	true		"body for Disponibilidad content"
+// @Success 201 {int} models.Disponibilidad
+// @Failure 403 body is empty
+// @router /SaldoCdp [post]
 func (c *DisponibilidadController) SaldoCdp() {
 	var v models.DatosRubroRegistroPresupuestal
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {

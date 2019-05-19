@@ -59,6 +59,26 @@ func init() {
 				&controllers.DisponibilidadController{},
 			),
 		),
+		beego.NSNamespace("/fuente_financiamiento",
+			beego.NSInclude(
+				&controllers.FuenteFinanciamientoController{},
+			),
+		),
+		beego.NSNamespace("/disponibilidad_apropiacion",
+			beego.NSInclude(
+				&controllers.DisponibilidadApropiacionController{},
+			),
+		),
+		beego.NSNamespace("/tipo_anulacion_presupuestal",
+			beego.NSInclude(
+				&controllers.TipoAnulacionPresupuestalController{},
+			),
+		),
+		beego.NSNamespace("/anulacion_disponibilidad",
+			beego.NSInclude(
+				&controllers.AnulacionDisponibilidadController{},
+			),
+		),
 	)
 
 	beego.AddNamespace(ns)
