@@ -43,9 +43,11 @@ func (c *RegistroPresupuestalController) Post() {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = v
 		} else {
+			beego.Error(err.Error())
 			c.Data["json"] = err.Error()
 		}
 	} else {
+		beego.Error(err.Error())
 		c.Data["json"] = err.Error()
 	}
 	c.ServeJSON()

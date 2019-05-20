@@ -79,6 +79,21 @@ func init() {
 				&controllers.AnulacionDisponibilidadController{},
 			),
 		),
+		beego.NSNamespace("/registro_presupuestal",
+			beego.NSInclude(
+				&controllers.RegistroPresupuestalController{},
+			),
+		),
+		beego.NSNamespace("/registro_presupuestal_disponibilidad_apropiacion",
+			beego.NSInclude(
+				&controllers.RegistroPresupuestalDisponibilidadApropiacionController{},
+			),
+		),
+		beego.NSNamespace("/anulacion_registro_presupuestal",
+			beego.NSInclude(
+				&controllers.AnulacionRegistroPresupuestalController{},
+			),
+		),
 	)
 
 	beego.AddNamespace(ns)

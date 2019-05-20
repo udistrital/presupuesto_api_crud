@@ -278,11 +278,11 @@ func SaldoRp(id_rp int, id_apropiacion int, id_fuente int) (saldo float64, compr
 		valor, err = strconv.ParseFloat(maps[0]["valor"].(string), 64)
 	}*/
 	valorrp, err := ValorRp(id_rp, id_apropiacion, id_fuente)
-	comprometidorp, err := ComprometidoRp(id_rp, id_apropiacion, id_fuente)
+	//comprometidorp, err := ComprometidoRp(id_rp, id_apropiacion, id_fuente)
 	anuladorp, err := AnuladoRp(id_rp, id_apropiacion, id_fuente)
 	anulado = anuladorp
-	comprometido = comprometidorp
-	saldo = valorrp - anuladorp - comprometidorp
+	// comprometido = comprometidorp
+	saldo = valorrp - anuladorp
 	return
 }
 
@@ -381,15 +381,15 @@ func AnulacionTotalRp(m *Info_rp_a_anular) (alerta []string, err error) {
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
 						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_registro_presupuestal
 						JOIN
-						financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
+						`+beego.AppConfig.String("PGschemas")+`.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion_registro_presupuestal = anulacion_registro_presupuestal.id
 						JOIN
-						financiera.registro_presupuestal_disponibilidad_apropiacion
+						`+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion
 						ON
 						registro_presupuestal_disponibilidad_apropiacion.id = ada.registro_presupuestal_disponibilidad_apropiacion
 						JOIN
-						financiera.registro_presupuestal
+						`+beego.AppConfig.String("PGschemas")+`.registro_presupuestal
 						ON
 						registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
 						WHERE vigencia = ?`, m.Rp_apropiacion[0].RegistroPresupuestal.Vigencia).QueryRow(&consecutivo)
@@ -480,15 +480,15 @@ func AnulacionParcialRp(m *Info_rp_a_anular) (alerta []string, err error) {
 	o.Raw(`SELECT COALESCE(MAX(consecutivo), 0)+1  as consecutivo
 						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_registro_presupuestal
 						JOIN
-						financiera.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
+						`+beego.AppConfig.String("PGschemas")+`.anulacion_registro_presupuestal_disponibilidad_apropiacion as ada
 						ON
 						ada.anulacion_registro_presupuestal = anulacion_registro_presupuestal.id
 						JOIN
-						financiera.registro_presupuestal_disponibilidad_apropiacion
+						`+beego.AppConfig.String("PGschemas")+`.registro_presupuestal_disponibilidad_apropiacion
 						ON
 						registro_presupuestal_disponibilidad_apropiacion.id = ada.registro_presupuestal_disponibilidad_apropiacion
 						JOIN
-						financiera.registro_presupuestal
+						`+beego.AppConfig.String("PGschemas")+`.registro_presupuestal
 						ON
 						registro_presupuestal.id = registro_presupuestal_disponibilidad_apropiacion.registro_presupuestal
 						WHERE vigencia = ?`, m.Rp_apropiacion[0].RegistroPresupuestal.Vigencia).QueryRow(&consecutivo)
