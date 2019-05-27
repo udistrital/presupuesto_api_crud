@@ -6,6 +6,8 @@ import (
 	"strconv"
 	"strings"
 
+	appmessagemanager "github.com/udistrital/presupuesto_crud/managers/appMessageManager"
+	rubromanager "github.com/udistrital/presupuesto_crud/managers/rubroManager"
 	"github.com/udistrital/presupuesto_crud/models"
 
 	"github.com/astaxie/beego"
@@ -34,17 +36,32 @@ func (c *RubroController) URLMapping() {
 // @router / [post]
 func (c *RubroController) Post() {
 	var v models.Rubro
-	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddRubro(&v); err == nil {
-			c.Data["json"] = v
-		} else {
-			c.Data["json"] = err
+	parentID := 0
+	var err error
+	if parentIdSTR := c.GetString("parentId"); parentIdSTR != "" {
+		parentID, err = strconv.Atoi(parentIdSTR)
+		if err != nil {
+			beego.Error(err.Error())
+			panic(appmessagemanager.ParamsErrorMessage())
 		}
+	}
+
+	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
+		if parentID != 0 {
+			if _, err := models.AddRubro(&v); err == nil {
+				c.Data["json"] = v
+			} else {
+				c.Data["json"] = err
+			}
+		} else {
+			rubromanager.RubroRelationRegistrator(parentID, &v)
+			c.Data["json"] = v
+		}
+
 	} else {
 
 		c.Data["json"] = err
 	}
-	c.ServeJSON()
 }
 
 // GetOne ...

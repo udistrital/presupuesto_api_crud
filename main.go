@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"reflect"
+
+	"github.com/astaxie/beego/context"
 
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/plugins/cors"
@@ -9,7 +12,6 @@ import (
 	_ "github.com/udistrital/presupuesto_crud/routers"
 
 	"github.com/astaxie/beego"
-	"github.com/udistrital/utils_oas/responseformat"
 )
 
 func init() {
@@ -34,7 +36,48 @@ func init() {
 }
 
 func main() {
-	beego.BConfig.RecoverFunc = responseformat.GlobalResponseHandler
+
+	beego.BConfig.RecoverFunc = func(ctx *context.Context) {
+		type response struct {
+			Code string
+			Type string
+			Body interface{}
+		}
+		out := response{}
+		Body := ctx.Input.Data()["json"]
+		defer func() {
+			ctx.Output.JSON(out, true, false)
+
+		}()
+		if r := recover(); r != nil {
+			beego.Error(r)
+			ctx.ResponseWriter.WriteHeader(500)
+			out.Body = r
+			out.Code = ""
+			out.Type = "error"
+		} else {
+			if reflect.ValueOf(Body).IsValid() {
+				defer func() {
+					if r := recover(); r != nil {
+						beego.Error(r)
+						out.Body = Body
+						out.Type = "success"
+						ctx.ResponseWriter.WriteHeader(200)
+					}
+				}()
+				if reflect.ValueOf(Body).IsNil() {
+					out.Body = nil
+					out.Type = "No Data Found"
+					ctx.ResponseWriter.WriteHeader(201)
+				}
+
+			} else {
+				out.Body = Body
+				out.Type = "success"
+				ctx.ResponseWriter.WriteHeader(200)
+			}
+		}
+	} //responseformat.GlobalResponseHandler
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
