@@ -47,7 +47,7 @@ func (c *RubroController) Post() {
 	}
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if parentID != 0 {
+		if parentID == 0 {
 			if _, err := models.AddRubro(&v); err == nil {
 				c.Data["json"] = v
 			} else {
