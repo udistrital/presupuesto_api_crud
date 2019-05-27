@@ -34,7 +34,6 @@ func init() {
 }
 
 func main() {
-	beego.BConfig.CopyRequestBody = true
 	beego.BConfig.RecoverFunc = responseformat.GlobalErrorHandler
 
 	if beego.BConfig.RunMode == "dev" {

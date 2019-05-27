@@ -141,7 +141,6 @@ func (c *ApropiacionController) GetAll() {
 	} else {
 		c.Data["json"] = l
 	}
-	c.ServeJSON()
 }
 
 // Put ...
