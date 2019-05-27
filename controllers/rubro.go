@@ -135,7 +135,6 @@ func (c *RubroController) GetAll() {
 	} else {
 		c.Data["json"] = l
 	}
-	c.ServeJSON()
 }
 
 // Put ...

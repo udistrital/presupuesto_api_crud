@@ -34,7 +34,7 @@ func init() {
 }
 
 func main() {
-	beego.BConfig.RecoverFunc = responseformat.GlobalErrorHandler
+	beego.BConfig.RecoverFunc = responseformat.GlobalResponseHandler
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true
