@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -166,50 +165,6 @@ func DeleteApropiacion(id int) (err error) {
 	return
 }
 
-//funcion para comprobar saldo de la apropiacion de un Rubro
-
-func SaldoApropiacion(Id int) (saldo map[string]float64, err error) {
-	var valor float64
-	saldo = make(map[string]float64)
-	valorapr, err := ValorApropiacion(Id)
-	if err != nil {
-		return
-	}
-	valorcdpapr, err := ValorCdpPorApropiacion(Id)
-	if err != nil {
-		return
-	}
-	valoranuladocdpapr, err := ValorAnuladoCdpPorApropiacion(Id)
-	if err != nil {
-		return
-	}
-	valorAdiciones, err := ValorMovimientosPorApropiacion(Id, 3, "cuenta_credito")
-	if err != nil {
-		return
-	}
-	valorAdicionesTraslados, err := ValorMovimientosPorApropiacion(Id, 1, "cuenta_credito")
-	if err != nil {
-		return
-	}
-	valorReducciones, err := ValorMovimientosPorApropiacion(Id, 2, "cuenta_credito")
-	if err != nil {
-		return
-	}
-	valorReduccionesTraslados, err := ValorMovimientosPorApropiacion(Id, 1, "cuenta_contra_credito")
-	if err != nil {
-		return
-	}
-	valor = valorapr - valorcdpapr + valoranuladocdpapr + valorAdiciones + valorAdicionesTraslados
-	saldo["original"] = valorapr
-	saldo["saldo"] = valor
-	saldo["comprometido"] = valorcdpapr - valoranuladocdpapr
-	saldo["adiciones"] = valorAdiciones
-	saldo["traslados"] = valorAdicionesTraslados
-	saldo["reducciones"] = valorReducciones + valorReduccionesTraslados
-	saldo["comprometido_anulado"] = valoranuladocdpapr
-	return
-}
-
 func VigenciaApropiacion() (ml []int, err error) {
 	qb, _ := orm.NewQueryBuilder("mysql")
 	qb.Select("DISTINCT vigencia").
@@ -225,83 +180,6 @@ func VigenciaApropiacion() (ml []int, err error) {
 	return ml, nil
 }
 
-//funcion para determinar el valor con traslados de la apropiacion
-func ValorApropiacion(Id int) (valor float64, err error) {
-	o := orm.NewOrm()
-	var maps_valor_tot []orm.Params
-	_, err = o.Raw(`SELECT valor
-				FROM `+beego.AppConfig.String("PGschemas")+`.apropiacion
-				WHERE id= ?`, Id).Values(&maps_valor_tot)
-	//fmt.Println("maps: ", len(maps_valor_tot))
-	if len(maps_valor_tot) > 0 && err == nil {
-		valor, _ = strconv.ParseFloat(maps_valor_tot[0]["valor"].(string), 64)
-	} else {
-		valor = 0
-	}
-
-	return
-}
-
-//funcion para determinar el total del valor de los cdp hechos a una apropiacion
-func ValorMovimientosPorApropiacion(Id int, tipoMov int, cuenta string) (valor float64, err error) {
-	o := orm.NewOrm()
-	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("COALESCE(sum(valor),0) as valor").
-		From("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion_disponibilidad_apropiacion").
-		InnerJoin("" + beego.AppConfig.String("PGschemas") + ".movimiento_apropiacion").
-		On("movimiento_apropiacion.id = movimiento_apropiacion_disponibilidad_apropiacion.movimiento_apropiacion").
-		Where(cuenta + " = ?").
-		And("tipo_movimiento_apropiacion = ?").
-		And("estado_movimiento_apropiacion = 2")
-	err = o.Raw(qb.String(), Id, tipoMov).QueryRow(&valor)
-	return
-}
-
-//funcion para determinar el total del valor de los cdp hechos a una apropiacion
-func ValorCdpPorApropiacion(Id int) (valor float64, err error) {
-	o := orm.NewOrm()
-	var maps_valor_tot []orm.Params
-	_, err = o.Raw(`SELECT  disponibilidad_apropiacion.apropiacion,
-		COALESCE(sum(disponibilidad_apropiacion.valor),0) AS valor
-	   FROM `+beego.AppConfig.String("PGschemas")+`.disponibilidad
-		 JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-		 WHERE apropiacion= ?
-		 GROUP BY disponibilidad_apropiacion.apropiacion
-				`, Id).Values(&maps_valor_tot)
-	//fmt.Println("maps: ", len(maps_valor_tot))
-	if len(maps_valor_tot) > 0 && err == nil {
-		valor, _ = strconv.ParseFloat(maps_valor_tot[0]["valor"].(string), 64)
-	} else {
-		valor = 0
-	}
-
-	return
-}
-
-//funcion para determinar el total del valor de los cdp hechos a una apropiacion
-func ValorAnuladoCdpPorApropiacion(Id int) (valor float64, err error) {
-	o := orm.NewOrm()
-	var maps_valor_tot []orm.Params
-	_, err = o.Raw(`SELECT anulacion_disponibilidad.estado_anulacion,
-								disponibilidad_apropiacion.apropiacion,
-								COALESCE(sum(anulacion_disponibilidad_apropiacion.valor),0) AS valor
-	   						FROM `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad_apropiacion
-		 					JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad_apropiacion ON anulacion_disponibilidad_apropiacion.disponibilidad_apropiacion = disponibilidad_apropiacion.id
-		 					JOIN `+beego.AppConfig.String("PGschemas")+`.disponibilidad ON disponibilidad_apropiacion.disponibilidad = disponibilidad.id
-					 		JOIN `+beego.AppConfig.String("PGschemas")+`.anulacion_disponibilidad ON anulacion_disponibilidad.id = anulacion_disponibilidad_apropiacion.anulacion
-							 WHERE apropiacion = ?  AND estado_anulacion = 3
-							 GROUP BY  anulacion_disponibilidad.estado_anulacion, disponibilidad_apropiacion.apropiacion
-							`, Id).Values(&maps_valor_tot)
-	//fmt.Println("maps: ", len(maps_valor_tot))
-	if len(maps_valor_tot) > 0 && err == nil {
-		valor, _ = strconv.ParseFloat(maps_valor_tot[0]["valor"].(string), 64)
-	} else {
-		valor = 0
-	}
-
-	return
-}
-
 //AprobarPresupuesto... Aprobacion de presupuesto (cambio de estado).
 func AprobarPresupuesto(UnidadEjecutora int, Vigencia int) (err error) {
 	o := orm.NewOrm()
@@ -310,16 +188,5 @@ func AprobarPresupuesto(UnidadEjecutora int, Vigencia int) (err error) {
 	qb2.Select("id").From(beego.AppConfig.String("PGschemas") + ".rubro").Where("unidad_ejecutora = ?")
 	qb.Update(beego.AppConfig.String("PGschemas") + ".apropiacion").Set("estado = ?").Where("vigencia = ? AND rubro in (" + qb2.String() + ")")
 	_, err = o.Raw(qb.String(), 2, Vigencia, UnidadEjecutora).Exec()
-	return
-}
-
-//UpdateApropiacionValue... Actualiza la apropiacion inicial de un rubro dado un id
-func UpdateApropiacionValue(id int, valor float64) (err error) {
-	o := orm.NewOrm()
-	apropiacion := &Apropiacion{Id: id, Valor: valor}
-	_, err = o.Update(apropiacion, "Valor")
-	if err != nil {
-		panic(err.Error())
-	}
 	return
 }

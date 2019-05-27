@@ -6,9 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/fatih/structs"
 	"github.com/udistrital/presupuesto_crud/models"
-	"github.com/udistrital/utils_oas/formatdata"
 
 	"github.com/astaxie/beego"
 )
@@ -38,19 +36,13 @@ func (c *RubroController) Post() {
 	var v models.Rubro
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if _, err := models.AddRubro(&v); err == nil {
-			alert := models.Alert{Type: "success", Code: "S_543", Body: v}
-			//go genRubrosTreeFile(int(v.UnidadEjecutora))
-			c.Data["json"] = alert
+			c.Data["json"] = v
 		} else {
-			alertdb := structs.Map(err)
-			var code string
-			formatdata.FillStruct(alertdb["Code"], &code)
-			alert := models.Alert{Type: "error", Code: "E_" + code, Body: err}
-			c.Data["json"] = alert
+			c.Data["json"] = err
 		}
 	} else {
-		alert := models.Alert{Type: "error", Code: "E_0458", Body: err}
-		c.Data["json"] = alert
+
+		c.Data["json"] = err
 	}
 	c.ServeJSON()
 }
@@ -182,17 +174,9 @@ func (c *RubroController) Delete() {
 	id, _ := strconv.Atoi(idStr)
 	//v, err1 := models.GetRubroById(id)
 	if err := models.DeleteRubro(id); err == nil {
-		alert := models.Alert{Type: "success", Code: "S_554", Body: nil}
-		// if err1 == nil {
-		// 	//go genRubrosTreeFile(int(v.UnidadEjecutora))
-		// }
-		c.Data["json"] = alert
+		c.Data["json"] = "OK"
 	} else {
-		alertdb := structs.Map(err)
-		var code string
-		formatdata.FillStruct(alertdb["Code"], &code)
-		alert := models.Alert{Type: "error", Code: "E_" + code, Body: err}
-		c.Data["json"] = alert
+		c.Data["json"] = err
 	}
 	c.ServeJSON()
 }

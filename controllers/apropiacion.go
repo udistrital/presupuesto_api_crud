@@ -3,15 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/astaxie/beego"
-	"github.com/fatih/structs"
-	"github.com/manucorporat/try"
 	"github.com/udistrital/presupuesto_crud/models"
-	"github.com/udistrital/utils_oas/formatdata"
 )
 
 // ApropiacionController operations for Apropiacion
@@ -40,16 +36,12 @@ func (c *ApropiacionController) Post() {
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if _, err := models.AddApropiacion(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = models.Alert{Type: "success", Code: "S_543", Body: v}
+			c.Data["json"] = v
 		} else {
-			alertdb := structs.Map(err)
-			var code string
-			formatdata.FillStruct(alertdb["Code"], &code)
-			alert := models.Alert{Type: "error", Code: "E_" + code, Body: err}
-			c.Data["json"] = alert
+			c.Data["json"] = err
 		}
 	} else {
-		c.Data["json"] = models.Alert{Code: "E_0458", Body: err, Type: "error"}
+		c.Data["json"] = err
 	}
 	c.ServeJSON()
 }
@@ -166,16 +158,12 @@ func (c *ApropiacionController) Put() {
 	v := models.Apropiacion{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
 		if err := models.UpdateApropiacionById(&v); err == nil {
-			c.Data["json"] = models.Alert{Type: "success", Code: "S_542", Body: v}
+			c.Data["json"] = v
 		} else {
-			alertdb := structs.Map(err)
-			var code string
-			formatdata.FillStruct(alertdb["Code"], &code)
-			alert := models.Alert{Type: "error", Code: "E_" + code, Body: err}
-			c.Data["json"] = alert
+			c.Data["json"] = err
 		}
 	} else {
-		c.Data["json"] = models.Alert{Code: "E_0458", Body: err, Type: "error"}
+		c.Data["json"] = err
 	}
 	c.ServeJSON()
 }
@@ -205,73 +193,26 @@ func (c *ApropiacionController) Delete() {
 // @Param	UnidadEjecutora		query 	string	true		"unidad ejecutora de los rubros a comprobar"
 // @Success 200 {string} resultado
 // @Failure 403
-// @router /AprobacionAsignacionInicial/ [get]
+// @router /AprobacionAsignacionInicial/ [put]
 func (c *ApropiacionController) AprobarPresupuesto() {
-	vigencia, err := c.GetInt("Vigencia")
-	if err == nil {
-		unidadejecutora, err := c.GetInt("UnidadEjecutora")
-		if err == nil {
-			err = models.AprobarPresupuesto(unidadejecutora, vigencia)
-			if err == nil {
-				c.Data["json"] = models.Alert{Code: "S_AP001", Body: nil, Type: "success"}
-			} else {
-				alertdb := structs.Map(err)
-				var code string
-				formatdata.FillStruct(alertdb["Code"], &code)
-				alert := models.Alert{Type: "error", Code: "E_" + code, Body: err}
-				c.Data["json"] = alert
-			}
-		} else {
-			c.Data["json"] = models.Alert{Code: "E_0458", Body: err.Error(), Type: "error"}
+	var (
+		vigencia int
+		ue       int
+		err      error
+	)
+
+	defer func() {
+		if r := recover(); r != nil {
+			c.Data["json"] = r
 		}
-	} else {
-		c.Data["json"] = models.Alert{Code: "E_0458", Body: err.Error(), Type: "error"}
+		c.ServeJSON()
+	}()
+
+	if vigencia, err = c.GetInt("Vigencia"); err != nil {
+		panic(err.Error())
 	}
-
-	c.ServeJSON()
-}
-
-// VigenciaApropiaciones ...
-// @Title VigenciaApropiaciones
-// @Description Obtiene todas las vigencias no repetidas de las apropiaciones
-// @Success 200 {string} resultado
-// @Failure 403
-// @router /VigenciaApropiaciones [get]
-func (c *ApropiacionController) VigenciaApropiaciones() {
-	m, err := models.VigenciaApropiacion()
-	if err != nil {
-		c.Data["json"] = models.Alert{Code: "E_458", Body: err.Error(), Type: "error"}
-	} else {
-		c.Data["json"] = m
+	if ue, err = c.GetInt("UnidadEjecutora"); err != nil {
+		panic(err.Error())
 	}
-	c.ServeJSON()
-}
-
-// UpdateApropiacionValue ...
-// @Title UpdateApropiacionValue
-// @Description Obtiene todas las vigencias no repetidas de las apropiaciones
-// @Success 200 {string} resultado
-// @Failure 403
-// @router /UpdateApropiacionValue/:id/:valor [put]
-func (c *ApropiacionController) UpdateApropiacionValue() {
-	idStr := c.Ctx.Input.Param(":id")
-	valStr := c.Ctx.Input.Param(":valor")
-	try.This(func() {
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			panic(err.Error())
-		}
-		val, err := strconv.ParseFloat(valStr, 64)
-		if err != nil {
-			panic(err.Error())
-		}
-		models.UpdateApropiacionValue(id, val)
-		c.Data["json"] = map[string]interface{}{"Code": "A_S002", "Body": nil, "Type": "success"}
-
-	}).Catch(func(e try.E) {
-		fmt.Println("expc ", e)
-		c.Data["json"] = map[string]interface{}{"Code": "E_0458", "Body": e, "Type": "error"}
-	})
-	c.ServeJSON()
-
+	beego.Debug(vigencia, ue)
 }

@@ -17,8 +17,7 @@ type Rubro struct {
 	Codigo          string `orm:"column(codigo)"`
 	Descripcion     string `orm:"column(descripcion);null"`
 	UnidadEjecutora int
-	Nombre          string           `orm:"column(nombre);null"`
-	ProductoRubro   []*ProductoRubro `orm:"reverse(many)"`
+	Nombre          string `orm:"column(nombre);null"`
 }
 
 func (t *Rubro) TableName() string {
@@ -33,12 +32,6 @@ func init() {
 // last inserted Id on success.
 func AddRubro(m *Rubro) (id int64, err error) {
 	o := orm.NewOrm()
-	qb2, _ := orm.NewQueryBuilder("mysql")
-	qb2.Select("id").From(beego.AppConfig.String("PGschemas") + ".rubro").Where("unidad_ejecutora = ? AND codigo = ?")
-	_, err = o.Raw(qb2.String(), m.UnidadEjecutora, m.Codigo).Exec()
-	if err != nil {
-		return
-	}
 	id, err = o.Insert(m)
 	return
 }

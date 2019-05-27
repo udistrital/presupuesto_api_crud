@@ -19,79 +19,14 @@ func init() {
 				&controllers.RubroController{},
 			),
 		),
-		beego.NSNamespace("/rubro_rubro",
-			beego.NSInclude(
-				&controllers.RubroRubroController{},
-			),
-		),
 		beego.NSNamespace("/apropiacion",
 			beego.NSInclude(
 				&controllers.ApropiacionController{},
 			),
 		),
-		beego.NSNamespace("/producto",
-			beego.NSInclude(
-				&controllers.ProductoController{},
-			),
-		),
-		beego.NSNamespace("/producto_rubro",
-			beego.NSInclude(
-				&controllers.ProductoRubroController{},
-			),
-		),
 		beego.NSNamespace("/date",
 			beego.NSInclude(
 				&controllers.Date{},
-			),
-		),
-		beego.NSNamespace("/tipo_movimiento_apropiacion",
-			beego.NSInclude(
-				&controllers.TipoMovimientoApropiacionController{},
-			),
-		),
-		beego.NSNamespace("/movimiento_apropiacion",
-			beego.NSInclude(
-				&controllers.MovimientoApropiacionController{},
-			),
-		),
-		beego.NSNamespace("/disponibilidad",
-			beego.NSInclude(
-				&controllers.DisponibilidadController{},
-			),
-		),
-		beego.NSNamespace("/fuente_financiamiento",
-			beego.NSInclude(
-				&controllers.FuenteFinanciamientoController{},
-			),
-		),
-		beego.NSNamespace("/disponibilidad_apropiacion",
-			beego.NSInclude(
-				&controllers.DisponibilidadApropiacionController{},
-			),
-		),
-		beego.NSNamespace("/tipo_anulacion_presupuestal",
-			beego.NSInclude(
-				&controllers.TipoAnulacionPresupuestalController{},
-			),
-		),
-		beego.NSNamespace("/anulacion_disponibilidad",
-			beego.NSInclude(
-				&controllers.AnulacionDisponibilidadController{},
-			),
-		),
-		beego.NSNamespace("/registro_presupuestal",
-			beego.NSInclude(
-				&controllers.RegistroPresupuestalController{},
-			),
-		),
-		beego.NSNamespace("/registro_presupuestal_disponibilidad_apropiacion",
-			beego.NSInclude(
-				&controllers.RegistroPresupuestalDisponibilidadApropiacionController{},
-			),
-		),
-		beego.NSNamespace("/anulacion_registro_presupuestal",
-			beego.NSInclude(
-				&controllers.AnulacionRegistroPresupuestalController{},
 			),
 		),
 	)

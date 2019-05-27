@@ -9,6 +9,7 @@ import (
 	_ "github.com/udistrital/presupuesto_crud/routers"
 
 	"github.com/astaxie/beego"
+	"github.com/udistrital/utils_oas/responseformat"
 )
 
 func init() {
@@ -33,6 +34,8 @@ func init() {
 }
 
 func main() {
+	beego.BConfig.CopyRequestBody = true
+	beego.BConfig.RecoverFunc = responseformat.GlobalErrorHandler
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true

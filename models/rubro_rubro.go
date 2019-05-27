@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-	"time"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
 
@@ -29,46 +27,7 @@ func init() {
 // last inserted Id on success.
 func AddRubroRubro(m *RubroRubro) (id int64, err error) {
 	o := orm.NewOrm()
-	var apropiaciones []int
-	qb, _ := orm.NewQueryBuilder("mysql")
-	qb.Select("apropiacion.id").
-		From("" + beego.AppConfig.String("PGschemas") + ".apropiacion").
-		InnerJoin(beego.AppConfig.String("PGschemas") + ".rubro").
-		On("apropiacion.rubro = rubro.id").
-		Where("rubro.codigo=?")
-	if _, err = o.Raw(qb.String(), m.RubroHijo.Codigo).QueryRows(&apropiaciones); err == nil {
-		if len(apropiaciones) > 0 {
-			err = errors.New("rubro tiene apropiacion")
-			return
-		}
-	}
-	o.Begin()
-	id_hijo, err := o.Insert(m.RubroHijo)
-	if err != nil {
-		o.Rollback()
-		return
-	}
-	m.RubroHijo.Id = int(id_hijo)
 	id, err = o.Insert(m)
-	if err != nil {
-		o.Rollback()
-		return
-	}
-
-	for _, producto := range m.RubroHijo.ProductoRubro {
-		producto.Rubro = m.RubroHijo
-		producto.ValorDistribucion = producto.ValorDistribucion / 100
-		producto.Activo = true
-		producto.FechaRegistro = time.Now().Local()
-		_, err = o.Insert(producto)
-		if err != nil {
-			fmt.Println("err ", err.Error())
-			o.Rollback()
-			return
-		}
-	}
-	o.Commit()
-	m.RubroHijo.ProductoRubro = nil
 	return
 }
 
